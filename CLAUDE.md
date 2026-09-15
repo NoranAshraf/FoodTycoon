@@ -15,14 +15,14 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
   `UpgradeRow.uxml` (row template), `UpgradeIcons/*.uxml` (one drawn icon per upgrade).
 - `Assets/TestAssets/` — third-party art (grinder, packing machine, truck, materials). Don't edit these; wrap them in
   our own prefabs instead.
-- `Assets/Materials/` — our own materials (`Product`, `Road`, `Ground`).
+- `Assets/Materials/` — our own materials (`Product`, `Road`, `Ground`, `Confetti` for the machine particle bursts).
 
 ## Game systems (how the loop is wired)
 
 | Script | Role |
 |---|---|
 | `GrinderLine` | Owns the 4 machine `Slot`s, `TryBuyMachine()` / `TryMerge()`, price curves, `OnChanged`. Starts with `initialGrinder` in slot 1. |
-| `Grinder` | Per-cycle scatters `CurrentPiecesPerCycle` pieces onto the belt at random spots/timings. `Level` doubles piece count per level (`levelOutputMultiplier`), tints `accentRenderers`, shows a `TextMesh` level label. `Dismantle()` when merged away. Pools its pieces (`ObjectPool<BeltItem>`). |
+| `Grinder` | Per-cycle scatters `CurrentPiecesPerCycle` pieces onto the belt at random spots/timings. `Level` doubles piece count per level (`levelOutputMultiplier`), tints `accentRenderers`, shows a `TextMesh` level label. `Dismantle()` when merged away. Pools its pieces (`ObjectPool<BeltItem>`). Prefab children `SpawnEffect` / `MergeEffect` (mesh-cube `ParticleSystem`s, world space, `scalingMode = Local`) play via `PlaySpawnEffect()` / `PlayMergeEffect()`. |
 | `ConveyorBelt` | Scrolls the belt texture (`_BaseMap_ST` via MaterialPropertyBlock) and moves `BeltItem`s from `pathStart` to `pathEnd`; raises `OnItemReachedEnd`. |
 | `PackingMachine` | Consumes `piecesPerBox` pieces (summing their `Value`) into a `PackagedBox`, which flies onto the counter `BoxStack`. Owns the box pool (`ObjectPool<PackagedBox>`); never `Destroy` a box, call `PackagedBox.ReturnToPool()`. |
 | `BoxStack` | Grid stack with ticket-based reservations so in-flight boxes target the right slot; counter is unlimited, truck bed holds 16. |

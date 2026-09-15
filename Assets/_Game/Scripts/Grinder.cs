@@ -74,6 +74,12 @@ public class Grinder : MonoBehaviour
 
     [SerializeField, Min(0.05f), Tooltip("Duration of the scale pop played on spawn and level up.")]
     private float popDuration = 0.35f;
+
+    [SerializeField, Tooltip("Burst played when the machine is bought. Optional.")]
+    private ParticleSystem spawnEffect;
+
+    [SerializeField, Tooltip("Burst played when another machine merges into this one. Optional.")]
+    private ParticleSystem mergeEffect;
     #endregion
 
     #region Private Fields
@@ -214,6 +220,10 @@ public class Grinder : MonoBehaviour
         popRoutine = null;
     }
 
+    public void PlaySpawnEffect() => PlayEffect(spawnEffect);
+
+    public void PlayMergeEffect() => PlayEffect(mergeEffect);
+
     /// <summary>
     /// Removes the machine. Pieces still flying are recalled; pieces already on the belt keep riding it and are
     /// destroyed instead of pooled once the packer consumes them.
@@ -238,6 +248,12 @@ public class Grinder : MonoBehaviour
     #endregion
 
     #region Private Methods
+    private static void PlayEffect(ParticleSystem effect)
+    {
+        if (effect != null)
+            effect.Play(true);
+    }
+
     private void Grind()
     {
         int count = CurrentPiecesPerCycle;

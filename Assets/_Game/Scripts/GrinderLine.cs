@@ -153,6 +153,7 @@ public class GrinderLine : MonoBehaviour
 
         Grinder machine = Spawn(slot);
         machine.Pop();
+        machine.PlaySpawnEffect();
         machines[slot] = machine;
         machinesBought++;
         OnChanged?.Invoke(this);
@@ -280,6 +281,7 @@ public class GrinderLine : MonoBehaviour
         {
             into.ShowLevel();
             into.Pop(mergeImpactScale);
+            into.PlayMergeEffect();
         }
     }
     #endregion

@@ -470,7 +470,8 @@
     rotate: 45deg;
 }
 
-/* ---- upgrades panel instance: fills the screen so its overlay can too ---- */
+/* ---- upgrades panel instance: fills the screen so its overlay can too. Hidden by default so the Edit Mode
+   preview doesn't dim the scene; UpgradesPanelController toggles display at runtime. ---- */
 
 .upgrades-panel {
     position: absolute;
@@ -478,4 +479,5 @@
     top: 0;
     right: 0;
     bottom: 0;
+    display: none;
 }
