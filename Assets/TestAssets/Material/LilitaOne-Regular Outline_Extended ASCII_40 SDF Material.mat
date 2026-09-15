@@ -19,34 +19,34 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties:
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-      _FaceTex:
+    - _FaceTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-      _MainTex:
+    - _MainTex:
         m_Texture: {fileID: 2800000, guid: b629a4eb781bd324488075cc2ae8b789, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: {}
+    m_Ints: []
     m_Floats:
-      _ColorMask: 15
-      _CullMode: 0
-      _MaskSoftnessX: 0
-      _MaskSoftnessY: 0
-      _Padding: 5
-      _Stencil: 0
-      _StencilComp: 8
-      _StencilOp: 0
-      _StencilReadMask: 255
-      _StencilWriteMask: 255
-      _VertexOffsetX: 0
-      _VertexOffsetY: 0
+    - _ColorMask: 15
+    - _CullMode: 0
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _Padding: 5
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
     m_Colors:
-      _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-      _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 0

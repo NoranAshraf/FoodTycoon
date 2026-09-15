@@ -20,62 +20,62 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties:
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-      _MainTex:
+    - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: {}
+    m_Ints: []
     m_Floats:
-      _AmbientCol: 0
-      _BumpScale: 1
-      _Clipped: 0
-      _ColBright: 0
-      _ColIntense: 1
-      _Cutoff: 0.5
-      _DetailNormalMapScale: 1
-      _DstBlend: 0
-      _GlossMapScale: 1
-      _Glossiness: 0.486
-      _GlossyReflections: 1
-      _Lumin: 0.35
-      _MaxLight: 1
-      _Metallic: 0.007
-      _MinLight: 0.602
-      _Mode: 0
-      _OcclusionStrength: 1
-      _Offset: 0.64
-      _OtlWidth: 2.4
-      _Parallax: 0.02
-      _RampSmooth: 1
-      _RampThreshold: 0.493
-      _RimMax: 4.34
-      _RimMin: 1
-      _Segmented: 1
-      _ShnIntense: 0
-      _ShnOverlap: 0
-      _ShnRange: 0.15
-      _ShnSmooth: 0
-      _Smoothness: 0.2
-      _SmoothnessTextureChannel: 0
-      _SpecularHighlights: 1
-      _SrcBlend: 1
-      _Steps: 21.9
-      _StpSmooth: 0.557
-      _UVSec: 0
-      _ZWrite: 1
-      __dummy__: 0
+    - _AmbientCol: 0
+    - _BumpScale: 1
+    - _Clipped: 0
+    - _ColBright: 0
+    - _ColIntense: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0.486
+    - _GlossyReflections: 1
+    - _Lumin: 0.35
+    - _MaxLight: 1
+    - _Metallic: 0.007
+    - _MinLight: 0.602
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Offset: 0.64
+    - _OtlWidth: 2.4
+    - _Parallax: 0.02
+    - _RampSmooth: 1
+    - _RampThreshold: 0.493
+    - _RimMax: 4.34
+    - _RimMin: 1
+    - _Segmented: 1
+    - _ShnIntense: 0
+    - _ShnOverlap: 0
+    - _ShnRange: 0.15
+    - _ShnSmooth: 0
+    - _Smoothness: 0.2
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Steps: 21.9
+    - _StpSmooth: 0.557
+    - _UVSec: 0
+    - _ZWrite: 1
+    - __dummy__: 0
     m_Colors:
-      _Color: {r: 0.990566, g: 0.4429512, b: 0.84753215, a: 1}
-      _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-      _HColor: {r: 1, g: 1, b: 1, a: 1}
-      _OtlColor: {r: 0.6417699, g: 1, b: 0.5235849, a: 0.53333336}
-      _RimColor: {r: 0.6427109, g: 0.8952588, b: 0.9528302, a: 0}
-      _SColor: {r: 0.3773585, g: 0, b: 0.20918792, a: 1}
-      _ShnColor: {r: 1, g: 1, b: 0, a: 1}
-      _SpecColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.990566, g: 0.4429512, b: 0.84753215, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _HColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OtlColor: {r: 0.6417699, g: 1, b: 0.5235849, a: 0.53333336}
+    - _RimColor: {r: 0.6427109, g: 0.8952588, b: 0.9528302, a: 0}
+    - _SColor: {r: 0.3773585, g: 0, b: 0.20918792, a: 1}
+    - _ShnColor: {r: 1, g: 1, b: 0, a: 1}
+    - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 0

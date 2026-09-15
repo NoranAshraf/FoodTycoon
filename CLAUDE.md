@@ -8,14 +8,20 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
 ## Project layout
 
 - `Assets/_Game/Scripts/` — all game code (one class per file, no namespaces).
-- `Assets/_Game/Prefabs/` — `Grinder`, `ProductCube` (belt piece), `PackagedBox`, `Truck`.
+- `Assets/_Game/Prefabs/` — `Grinder`, `ProductCube` (belt piece), `PackagedBox`, `Truck`. `Grinder` holds its own copy of
+  the grinder art (the third-party `Grinders.prefab` was unpacked into it and its disabled 700k-vertex leftovers
+  deleted); `Truck` is still a variant of `TestAssets/GameObject/truck Variant.prefab`. The packing machine is a plain
+  (unpacked) hierarchy in the scene.
 - `Assets/_Game/Upgrades/` — one `UpgradeDefinition` asset per upgrades-menu row.
 - `Assets/_Game/UI/` — `HUD.uxml`, `HUD.uss`, `HUDPanelSettings.asset` (1080×2400 reference, match width),
   `UnityDefaultRuntimeTheme.tss`; `UpgradesPanel.uxml/.uss` (overlay, instanced inside `HUD.uxml`),
   `UpgradeRow.uxml` (row template), `UpgradeIcons/*.uxml` (one drawn icon per upgrade).
 - `Assets/TestAssets/` — third-party art (grinder, packing machine, truck, materials). Don't edit these; wrap them in
-  our own prefabs instead.
-- `Assets/Materials/` — our own materials (`Product`, `Road`, `Ground`, `Confetti` for the machine particle bursts).
+  our own prefabs instead. Its `Toony Colors Pro 2` / `Simple Toon` shaders are ripped stubs (unlit `tex × color`, not
+  SRP-Batcher compatible) — anything we place in the scene uses the equivalent URP/Unlit materials below instead.
+- `Assets/Materials/` — our own materials (`Product`, `Road`, `Ground`, `Confetti` for the machine particle bursts;
+  URP/Unlit stand-ins for the stub-shader art: `GrinderBlue`/`GrinderBlueBright`, `Noodle`, `PackerPink`/`Purple`/
+  `Violet`, `BoxRed`/`BoxGreen`/`BoxGreenDark`).
 
 ## Game systems (how the loop is wired)
 
@@ -33,7 +39,8 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
 | `UpgradeManager` | On `GameManager`. Tracks levels, `TryBuy()` spends `Wallet` money, `GetMultiplier(stat)` folds every definition for that stat, `OnChanged`. Lazy-initialised so readers may subscribe in `OnEnable`. |
 | `HudController` | Binds `HUD.uxml` (money pill, SELL, ADD MACHINE, MERGE, UPGRADES tab) to `Wallet`, `TruckDepot`, `GrinderLine`, `UpgradesPanelController`. |
 | `UpgradesPanelController` / `UpgradeRowView` | On `HUD`. Builds one `UpgradeRow.uxml` per definition into the `upgrades-rows` ScrollView, refreshes on `UpgradeManager.OnChanged` + wallet changes, `Show()`/`Hide()` (X button or overlay tap). |
-| `MoneyFormatter` | `$7`, `$42.0`, `$101.7k` … (`wholeDollars` for prices/sell amount). |
+| `PerformanceSettings` | On `GameManager`. Sets `Application.targetFrameRate` (60; Android otherwise defaults to 30). |
+| `MoneyFormatter` | `$7`, `$42.0`, then `$1k`, `$1.5k`, `$101.7k`, `$1.2M` … one decimal, trailing `.0` dropped once suffixed (`wholeDollars` for prices/sell amount). |
 
 Economy defaults (all Inspector-tunable): piece `$3.5`, 2 pieces per box → `$7` a box; machines `$30 × 1.6ⁿ`,
 merges `$60 × 2.2^(level−1)`, rounded to whole dollars. Merge takes the lowest pair of equal-level machines and keeps
@@ -69,6 +76,27 @@ Speed stats divide a time (`cycleTime / multiplier`); money stats multiply a val
   against the 1080×2400 portrait reference; icons are drawn with plain styled elements, no sprites.
 - Drive UI from C# by querying elements (`rootVisualElement.Q<...>`) and binding to game state; keep game logic out of
   UI scripts. Disable buttons with `SetEnabled(false)` and style `:disabled` explicitly.
+
+## Android build
+
+Build with `unity command build --target Android --outputPath Builds/FoodTycoon.apk --confirm true`, then poll
+`build_status` (≈3 min, IL2CPP). `Builds/` is git-ignored. Reference size after the optimisation pass: **20.5 MiB**
+(was 44.3 MiB); scene asset data ≈6 MB, `libil2cpp.so` ≈19 MB uncompressed.
+
+What keeps it that size — keep these when adding content:
+
+- Only the `Mobile` quality level / `Mobile_RPAsset` ship on Android: render scale 0.8, 1024 hard-shadow map at 30 m,
+  no additional lights / cookies / light layers / reflection probes / lens flares / mixed lighting, 16³ LUT. The camera
+  leaves depth and opaque textures on *Use Pipeline Settings* (off) — nothing samples them.
+- Player settings: IL2CPP, ARM64 only, managed stripping *Medium*, IL2CPP code generation *Faster (smaller) builds*,
+  Optimize Mesh Data on, prebaked collision meshes, R8 minify on release, Swappy frame pacing, blit *Auto*, portrait
+  only, id `com.DefaultCompany.FoodTycoon`, build-profile compression LZ4HC. Default texture format is ASTC; the
+  2048² noodle texture is capped at 1024 on Android via a platform override.
+- No `Resources/` folders (everything there is packed unconditionally); the TMP essentials were deleted because no
+  TextMeshPro component exists — re-import them if TMP is ever adopted. Unused packages (Visual Scripting, Timeline,
+  AI Navigation) were removed.
+- Whatever a prefab references ships, active or not: check new art for disabled high-poly children before wrapping
+  it (`AssetDatabase.GetDependencies` on the scene is the quick audit).
 
 ## Working with the Editor (Unity CLI / `com.unity.pipeline`)
 

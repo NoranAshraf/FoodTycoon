@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-/// <summary>Formats money the way the HUD shows it: "$7", "$42.0", "$101.7k", "$3.2M".</summary>
+/// <summary>Formats money the way the HUD shows it: "$7", "$42.0", "$1k", "$101.7k", "$3.2M".</summary>
 public static class MoneyFormatter
 {
     #region Private Fields
@@ -15,17 +15,28 @@ public static class MoneyFormatter
         double magnitude = Math.Abs(value);
         int tier = 0;
 
-        while (magnitude >= 1000d && tier < Suffixes.Length - 1)
+        // Fix: round before comparing so $999.96 becomes "$1k" rather than "$1000.0".
+        while (tier < Suffixes.Length - 1 && Math.Round(magnitude, DecimalsFor(tier, wholeDollars)) >= 1000d)
         {
             magnitude /= 1000d;
             tier++;
         }
 
-        string digits = tier == 0 && wholeDollars
-            ? magnitude.ToString("0", CultureInfo.InvariantCulture)
-            : magnitude.ToString("0.0", CultureInfo.InvariantCulture);
-
+        string digits = magnitude.ToString(PatternFor(tier, wholeDollars), CultureInfo.InvariantCulture);
         return (value < 0d ? "-$" : "$") + digits + Suffixes[tier];
+    }
+    #endregion
+
+    #region Private Methods
+    private static int DecimalsFor(int tier, bool wholeDollars) => tier == 0 && wholeDollars ? 0 : 1;
+
+    /// <summary>Plain dollars keep one decimal ("$42.0"); suffixed amounts drop a trailing zero ("$1k").</summary>
+    private static string PatternFor(int tier, bool wholeDollars)
+    {
+        if (tier > 0)
+            return "0.#";
+
+        return wholeDollars ? "0" : "0.0";
     }
     #endregion
 }
