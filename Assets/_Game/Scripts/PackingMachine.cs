@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 /// <summary>
 /// Consumes pieces arriving at the end of the belt, packs them into boxes and drops each box onto the counter stack
-/// beside the machine. A <see cref="BoxDispatcher"/> moves them on from there.
+/// beside the machine. A <see cref="BoxDispatcher"/> moves them on from there. Owns the box pool: boxes come back
+/// here (via <see cref="PackagedBox.ReturnToPool"/>) once a truck has driven off with them. Pooled boxes live at the
+/// scene root.
 /// </summary>
 public class PackingMachine : MonoBehaviour
 {
@@ -27,9 +30,13 @@ public class PackingMachine : MonoBehaviour
 
     [SerializeField, Min(0f), Tooltip("Arc height of the hop.")]
     private float sendArcHeight = 0.3f;
+
+    [SerializeField, Min(1), Tooltip("Upper bound on idle boxes kept in the pool (a full truck returns 16 at once).")]
+    private int maxPooledBoxes = 32;
     #endregion
 
     #region Private Fields
+    private ObjectPool<PackagedBox> boxPool;
     private int bufferedPieces;
     private float bufferedValue;
     #endregion
@@ -43,6 +50,19 @@ public class PackingMachine : MonoBehaviour
     #endregion
 
     #region MonoBehaviour Lifecycle
+    private void Awake()
+    {
+        boxPool = new ObjectPool<PackagedBox>(
+            createFunc: CreateBox,
+            actionOnGet: OnGetBox,
+            actionOnRelease: OnReleaseBox,
+            actionOnDestroy: OnDestroyBox,
+            collectionCheck: false,
+            defaultCapacity: 16,
+            maxSize: maxPooledBoxes
+        );
+    }
+
     private void OnEnable()
     {
         if (inputBelt != null)
@@ -78,9 +98,35 @@ public class PackingMachine : MonoBehaviour
             return;
 
         int ticket = outputStack.Reserve();
-        PackagedBox box = Instantiate(boxPrefab, boxOutput.position, boxOutput.rotation);
+        PackagedBox box = boxPool.Get();
         box.Value = value;
+        box.transform.SetPositionAndRotation(boxOutput.position, boxOutput.rotation);
         box.FlyTo(outputStack, ticket, sendDuration, sendArcHeight);
+    }
+
+    private PackagedBox CreateBox()
+    {
+        PackagedBox box = Instantiate(boxPrefab);
+        box.Pool = boxPool;
+        return box;
+    }
+
+    private static void OnGetBox(PackagedBox box)
+    {
+        box.gameObject.SetActive(true);
+    }
+
+    private void OnReleaseBox(PackagedBox box)
+    {
+        box.transform.SetParent(null, false);
+        box.gameObject.SetActive(false);
+    }
+
+    private static void OnDestroyBox(PackagedBox box)
+    {
+        // Fix: pools are cleared on Play-mode exit after scene objects are already gone.
+        if (box != null)
+            Destroy(box.gameObject);
     }
     #endregion
 }

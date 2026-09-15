@@ -21,9 +21,6 @@ public class GrinderLine : MonoBehaviour
     [SerializeField, Tooltip("Belt every machine feeds.")]
     private ConveyorBelt belt;
 
-    [SerializeField, Tooltip("Parent for the pieces the machines produce.")]
-    private Transform pieceContainer;
-
     [SerializeField, Tooltip("Wallet that pays for machines and merges.")]
     private Wallet wallet;
 
@@ -105,7 +102,7 @@ public class GrinderLine : MonoBehaviour
         if (initialGrinder != null)
         {
             initialGrinder.transform.SetPositionAndRotation(slots[0].position, slots[0].rotation);
-            initialGrinder.Setup(belt, pieceContainer);
+            initialGrinder.Setup(belt);
             initialGrinder.SetLevel(1);
             machines[0] = initialGrinder;
         }
@@ -158,7 +155,7 @@ public class GrinderLine : MonoBehaviour
     {
         Grinder machine = Instantiate(grinderPrefab, slots[slot].position, slots[slot].rotation, transform);
         machine.name = grinderPrefab.name + " " + (slot + 1);
-        machine.Setup(belt, pieceContainer);
+        machine.Setup(belt);
         machine.SetLevel(1);
         return machine;
     }

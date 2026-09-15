@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 
 /// <summary>
 /// Periodically grinds out product pieces and scatters them onto the belt in front of it. Higher levels (reached by
-/// merging two machines) produce more pieces per cycle and are colour coded.
+/// merging two machines) produce more pieces per cycle and are colour coded. Pooled pieces live at the scene root.
 /// </summary>
 public class Grinder : MonoBehaviour
 {
@@ -18,9 +18,6 @@ public class Grinder : MonoBehaviour
 
     [SerializeField, Tooltip("Where pieces leave the grinder (the extrusion plate).")]
     private Transform outputPoint;
-
-    [SerializeField, Tooltip("Optional parent for spawned pieces, to keep the hierarchy tidy.")]
-    private Transform pieceContainer;
 
     [SerializeField, Min(0.1f), Tooltip("Seconds between grind cycles.")]
     private float cycleTime = 2f;
@@ -154,11 +151,10 @@ public class Grinder : MonoBehaviour
     #endregion
 
     #region Public Methods
-    /// <summary>Points a freshly spawned machine at the belt it feeds and the container its pieces live in.</summary>
-    public void Setup(ConveyorBelt targetBelt, Transform container)
+    /// <summary>Points a freshly spawned machine at the belt it feeds.</summary>
+    public void Setup(ConveyorBelt targetBelt)
     {
         belt = targetBelt;
-        pieceContainer = container;
     }
 
     public void SetLevel(int level)
@@ -294,7 +290,7 @@ public class Grinder : MonoBehaviour
 
     private BeltItem CreatePiece()
     {
-        BeltItem piece = Instantiate(piecePrefab, pieceContainer);
+        BeltItem piece = Instantiate(piecePrefab);
         piece.Pool = piecePool;
         return piece;
     }

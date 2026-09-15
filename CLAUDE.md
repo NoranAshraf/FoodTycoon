@@ -22,10 +22,10 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
 | `GrinderLine` | Owns the 4 machine `Slot`s, `TryBuyMachine()` / `TryMerge()`, price curves, `OnChanged`. Starts with `initialGrinder` in slot 1. |
 | `Grinder` | Per-cycle scatters `CurrentPiecesPerCycle` pieces onto the belt at random spots/timings. `Level` doubles piece count per level (`levelOutputMultiplier`), tints `accentRenderers`, shows a `TextMesh` level label. `Dismantle()` when merged away. Pools its pieces (`ObjectPool<BeltItem>`). |
 | `ConveyorBelt` | Scrolls the belt texture (`_BaseMap_ST` via MaterialPropertyBlock) and moves `BeltItem`s from `pathStart` to `pathEnd`; raises `OnItemReachedEnd`. |
-| `PackingMachine` | Consumes `piecesPerBox` pieces (summing their `Value`) into a `PackagedBox`, which flies onto the counter `BoxStack`. |
+| `PackingMachine` | Consumes `piecesPerBox` pieces (summing their `Value`) into a `PackagedBox`, which flies onto the counter `BoxStack`. Owns the box pool (`ObjectPool<PackagedBox>`); never `Destroy` a box, call `PackagedBox.ReturnToPool()`. |
 | `BoxStack` | Grid stack with ticket-based reservations so in-flight boxes target the right slot; counter is unlimited, truck bed holds 16. |
 | `BoxDispatcher` | Moves the oldest counter box (after `dwellTime`) to `Destination` (the docked truck bed). |
-| `Truck` / `TruckDepot` | Depot keeps one truck docked; `Sell()` pays `LoadValue` into the `Wallet`, drives it out right and a new truck in from the left, redirecting the dispatcher. |
+| `Truck` / `TruckDepot` | Depot keeps one truck docked; `Sell()` pays `LoadValue` into the `Wallet`, drives it out right and a new truck in from the left, redirecting the dispatcher. A departing truck releases its bed boxes to the pool (`BoxStack.ReleaseAll()`) before despawning. |
 | `Wallet` | `double` balance, `Add` / `TrySpend`, `OnBalanceChanged`. |
 | `HudController` | Binds `HUD.uxml` (money pill, SELL, ADD MACHINE, MERGE) to `Wallet`, `TruckDepot`, `GrinderLine`. |
 | `MoneyFormatter` | `$7`, `$42.0`, `$101.7k` … (`wholeDollars` for prices/sell amount). |
@@ -43,6 +43,8 @@ the earlier slot.
 - Cross-system communication goes through C# events (`OnChanged`, `OnBalanceChanged`, …) or direct serialized
   references wired in the scene — never `Find…` at runtime, never `SendMessage`.
 - Avoid per-frame allocations (no LINQ / `new WaitForSeconds` in hot paths; loop with `yield return null`).
+- Anything spawned repeatedly (belt pieces, boxes) goes through `ObjectPool<T>`; pooled objects are instantiated
+  at the **scene root** (no container/parent object) and re-parented back to the root on release.
 - Money is `double`; per-piece values are `float`.
 
 ## UI

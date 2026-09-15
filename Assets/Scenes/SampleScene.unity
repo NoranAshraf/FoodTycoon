@@ -229,37 +229,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2022464013}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &245592069
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 245592070}
-  m_Layer: 0
-  m_Name: Products
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &245592070
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245592069}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &276562446 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3622738201281143454, guid: 9eec82f1f3020be42800ca8ab402cac8, type: 3}
@@ -442,6 +411,7 @@ MonoBehaviour:
   outputStack: {fileID: 933164429}
   sendDuration: 0.4
   sendArcHeight: 0.3
+  maxPooledBoxes: 32
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1530,7 +1500,6 @@ MonoBehaviour:
   - {fileID: 225256485}
   initialGrinder: {fileID: 276562446}
   belt: {fileID: 1059128430}
-  pieceContainer: {fileID: 245592070}
   wallet: {fileID: 449056341}
   firstMachinePrice: 30
   machinePriceGrowth: 1.6
@@ -1699,10 +1668,6 @@ PrefabInstance:
       propertyPath: belt
       value: 
       objectReference: {fileID: 1059128430}
-    - target: {fileID: 3622738201281143454, guid: 9eec82f1f3020be42800ca8ab402cac8, type: 3}
-      propertyPath: pieceContainer
-      value: 
-      objectReference: {fileID: 245592070}
     - target: {fileID: 4184095260566385936, guid: 9eec82f1f3020be42800ca8ab402cac8, type: 3}
       propertyPath: m_Name
       value: Grinder 1
@@ -1764,7 +1729,6 @@ SceneRoots:
   - {fileID: 487014520}
   - {fileID: 1208798591}
   - {fileID: 955256890}
-  - {fileID: 245592070}
   - {fileID: 449056342}
   - {fileID: 679858164}
   - {fileID: 1961372611}

@@ -50,14 +50,16 @@ MonoBehaviour:
   belt: {fileID: 0}
   piecePrefab: {fileID: 2015019918553565099, guid: 562cc3c0660a6ad41aede481003c8dd8, type: 3}
   outputPoint: {fileID: 858151892306060567}
-  pieceContainer: {fileID: 0}
   cycleTime: 3
   startDelay: 0
   piecesPerCycle: 2
-  pieceSpacing: 0.09
+  levelOutputMultiplier: 2
+  burstDuration: 0.4
+  landingSpreadAcross: 0.14
+  landingSpreadAlong: 0.15
   pieceValue: 3.5
-  levelValueMultiplier: 2
   tossDuration: 0.35
+  tossDurationJitter: 0.25
   tossArcHeight: 0.15
   maxPooledPieces: 64
   levelLabel: {fileID: 5591772699843888383}

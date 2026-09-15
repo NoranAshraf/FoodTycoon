@@ -129,14 +129,15 @@ public class BoxStack : MonoBehaviour
         return box;
     }
 
-    /// <summary>Removes every box from the stack (they stay parented until the caller moves them).</summary>
-    public List<PackagedBox> TakeAll()
+    /// <summary>Returns every stacked box to its pool and empties the stack.</summary>
+    public void ReleaseAll()
     {
-        var taken = new List<PackagedBox>(boxes);
+        for (int i = 0; i < boxes.Count; i++)
+            boxes[i].ReturnToPool();
+
         boxes.Clear();
         isSettling = false;
         OnChanged?.Invoke(this);
-        return taken;
     }
     #endregion
 

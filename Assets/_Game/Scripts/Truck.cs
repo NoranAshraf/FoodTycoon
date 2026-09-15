@@ -62,14 +62,22 @@ public class Truck : MonoBehaviour
         StartCoroutine(DriveRoutine(target, speed, onArrived));
     }
 
-    /// <summary>Drives to <paramref name="exit"/> and despawns there, taking its load with it.</summary>
+    /// <summary>Drives to <paramref name="exit"/> and despawns there, returning its load to the box pool.</summary>
     public void Depart(Vector3 exit, float speed)
     {
-        DriveTo(exit, speed, () => Destroy(gameObject));
+        DriveTo(exit, speed, Despawn);
     }
     #endregion
 
     #region Private Methods
+    private void Despawn()
+    {
+        if (bedStack != null)
+            bedStack.ReleaseAll();
+
+        Destroy(gameObject);
+    }
+
     private IEnumerator DriveRoutine(Vector3 target, float speed, Action onArrived)
     {
         IsDriving = true;
