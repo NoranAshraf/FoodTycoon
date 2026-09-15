@@ -1,0 +1,182 @@
+/* Designed against a 1080x2400 reference resolution (see HUDPanelSettings). */
+
+.hud {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* ---- top bar / money ---- */
+
+.top-bar {
+    position: absolute;
+    top: 48px;
+    right: 36px;
+    flex-direction: row;
+}
+
+.pill {
+    flex-direction: row;
+    align-items: center;
+    height: 104px;
+    min-width: 330px;
+    padding: 0 40px 0 16px;
+    background-color: rgb(255, 255, 255);
+    border-width: 5px;
+    border-color: rgb(62, 63, 124);
+    border-radius: 60px;
+}
+
+.pill__text {
+    flex-grow: 1;
+    font-size: 58px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(47, 47, 91);
+}
+
+.cash {
+    width: 88px;
+    height: 56px;
+    margin-right: 14px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(88, 187, 98);
+    border-width: 4px;
+    border-color: rgb(58, 142, 68);
+    border-radius: 10px;
+}
+
+.cash__band {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 30px;
+    right: 30px;
+    background-color: rgb(233, 120, 150);
+    border-radius: 4px;
+}
+
+.cash__coin {
+    width: 30px;
+    height: 30px;
+    background-color: rgb(222, 245, 218);
+    border-width: 3px;
+    border-color: rgb(58, 142, 68);
+    border-radius: 15px;
+}
+
+/* ---- sell button ---- */
+
+.sell-button {
+    position: absolute;
+    left: 0;
+    top: 57%;
+    width: 240px;
+    height: 205px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(248, 198, 47);
+    border-width: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 44px;
+    border-bottom-right-radius: 44px;
+}
+
+.sell-button:hover {
+    background-color: rgb(255, 212, 74);
+}
+
+.sell-button:active {
+    background-color: rgb(229, 178, 31);
+    scale: 0.96 0.96;
+}
+
+.sell-button__title {
+    margin-top: 6px;
+    font-size: 38px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(74, 74, 130);
+}
+
+.sell-button__amount {
+    font-size: 54px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(48, 48, 80);
+}
+
+/* gift icon, drawn with plain elements */
+
+.gift {
+    width: 76px;
+    height: 70px;
+    align-items: center;
+}
+
+.gift__box {
+    position: absolute;
+    top: 22px;
+    left: 6px;
+    right: 6px;
+    bottom: 0;
+    background-color: rgb(255, 255, 255);
+    border-width: 3px;
+    border-color: rgb(225, 105, 105);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.gift__lid {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background-color: rgb(255, 255, 255);
+    border-width: 3px;
+    border-color: rgb(225, 105, 105);
+    border-radius: 6px;
+}
+
+.gift__ribbon-v {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 12px;
+    margin-left: -6px;
+    background-color: rgb(232, 69, 60);
+}
+
+.gift__ribbon-h {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 14px;
+    height: 12px;
+    background-color: rgb(232, 69, 60);
+}
+
+.gift__bow {
+    position: absolute;
+    top: 0;
+    width: 22px;
+    height: 16px;
+    background-color: rgb(232, 69, 60);
+    border-radius: 11px;
+}
+
+.gift__bow--left {
+    left: 18px;
+}
+
+.gift__bow--right {
+    right: 18px;
+}
