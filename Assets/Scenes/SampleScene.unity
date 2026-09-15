@@ -817,6 +817,7 @@ MonoBehaviour:
   exitPoint: {fileID: 1259290498}
   dispatcher: {fileID: 933164430}
   wallet: {fileID: 449056341}
+  labelLayer: {fileID: 1961372613}
   truckSpeed: 3
 --- !u!4 &679858164
 Transform:
@@ -1205,6 +1206,7 @@ GameObject:
   - component: {fileID: 1961372610}
   - component: {fileID: 1961372609}
   - component: {fileID: 1961372612}
+  - component: {fileID: 1961372613}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -1281,6 +1283,20 @@ MonoBehaviour:
   upgrades: {fileID: 449056343}
   wallet: {fileID: 449056341}
   rowTemplate: {fileID: 9197481963319205126, guid: a37a0202a110b594795989479ba101b7, type: 3}
+--- !u!114 &1961372613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961372608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52cfef1bdb379f347bbfb845755e878a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldLabelLayer
+  worldCamera: {fileID: 330585545}
+  containerName: world-labels
 --- !u!1 &1981635634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,6 +1365,7 @@ MonoBehaviour:
   - {fileID: 225256485}
   initialGrinder: {fileID: 276562446}
   belt: {fileID: 1059128430}
+  labelLayer: {fileID: 1961372613}
   wallet: {fileID: 449056341}
   upgrades: {fileID: 449056343}
   firstMachinePrice: 30

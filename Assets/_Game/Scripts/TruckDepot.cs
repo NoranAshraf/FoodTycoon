@@ -29,6 +29,9 @@ public class TruckDepot : MonoBehaviour
     [SerializeField, Tooltip("Wallet that receives the money from each sale.")]
     private Wallet wallet;
 
+    [SerializeField, Tooltip("HUD layer that draws every truck's capacity label.")]
+    private WorldLabelLayer labelLayer;
+
     [SerializeField, Min(0.1f), Tooltip("Truck driving speed in world units per second.")]
     private float truckSpeed = 3f;
     #endregion
@@ -50,6 +53,7 @@ public class TruckDepot : MonoBehaviour
         if (initialTruck != null)
         {
             initialTruck.transform.SetPositionAndRotation(dockPoint.position, dockPoint.rotation);
+            initialTruck.Setup(labelLayer);
             Dock(initialTruck);
         }
         else
@@ -85,7 +89,9 @@ public class TruckDepot : MonoBehaviour
     #region Private Methods
     private Truck SpawnTruck(Transform at)
     {
-        return Instantiate(truckPrefab, at.position, at.rotation, transform);
+        Truck truck = Instantiate(truckPrefab, at.position, at.rotation, transform);
+        truck.Setup(labelLayer);
+        return truck;
     }
 
     private void Dock(Truck truck)

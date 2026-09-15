@@ -28,13 +28,14 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
 | Script | Role |
 |---|---|
 | `GrinderLine` | Owns the 4 machine `Slot`s, `TryBuyMachine()` / `TryMerge()`, price curves, `OnChanged`. Starts with `initialGrinder` in slot 1. |
-| `Grinder` | Per-cycle scatters `CurrentPiecesPerCycle` pieces onto the belt at random spots/timings. `Level` doubles piece count per level (`levelOutputMultiplier`), tints `accentRenderers`, shows a `TextMesh` level label. `Dismantle()` when merged away. Pools its pieces (`ObjectPool<BeltItem>`). Prefab children `SpawnEffect` / `MergeEffect` (mesh-cube `ParticleSystem`s, world space, `scalingMode = Local`) play via `PlaySpawnEffect()` / `PlayMergeEffect()`. |
+| `Grinder` | Per-cycle scatters `CurrentPiecesPerCycle` pieces onto the belt at random spots/timings. `Level` doubles piece count per level (`levelOutputMultiplier`), tints `accentRenderers`, shows a `WorldLabel` level label. `Dismantle()` when merged away. Pools its pieces (`ObjectPool<BeltItem>`). Prefab children `SpawnEffect` / `MergeEffect` (mesh-cube `ParticleSystem`s, world space, `scalingMode = Local`) play via `PlaySpawnEffect()` / `PlayMergeEffect()`. |
 | `ConveyorBelt` | Scrolls the belt texture (`_BaseMap_ST` via MaterialPropertyBlock) and moves `BeltItem`s from `pathStart` to `pathEnd`; raises `OnItemReachedEnd`. |
 | `PackingMachine` | Consumes `piecesPerBox` pieces (summing their `Value`) into a `PackagedBox`, which flies onto the counter `BoxStack`. Owns the box pool (`ObjectPool<PackagedBox>`); never `Destroy` a box, call `PackagedBox.ReturnToPool()`. |
 | `BoxStack` | Grid stack with ticket-based reservations so in-flight boxes target the right slot; counter is unlimited, truck bed holds 16. |
 | `BoxDispatcher` | Moves the oldest counter box (after `dwellTime`) to `Destination` (the docked truck bed). |
 | `Truck` / `TruckDepot` | Depot keeps one truck docked; `Sell()` pays `LoadValue` into the `Wallet`, drives it out right and a new truck in from the left, redirecting the dispatcher. A departing truck releases its bed boxes to the pool (`BoxStack.ReleaseAll()`) before despawning. |
 | `Wallet` | `double` balance, `Add` / `TrySpend`, `OnBalanceChanged`. |
+| `WorldLabel` / `WorldLabelLayer` | The `LV n` and `n/16` labels over machines and trucks. `WorldLabel` sits on the anchor object in the prefab (`LevelLabel`, `CapacityLabel`), owns a UI Toolkit `Label` (class `world-label`, white bold with a grey `-unity-text-outline`) and exposes `Text`; `WorldLabelLayer` on `HUD` projects every registered label into the `world-labels` container (first child of `hud`, so HUD widgets and overlays draw over it) each `LateUpdate`, scaled with the object's lossy scale so it follows pops and merges. Spawners inject the layer (`Grinder.Setup(belt, labelLayer)`, `Truck.Setup(labelLayer)`) — prefabs can't reference the scene. `pivot` picks which point of the label sits on the anchor (grinder: right edge). |
 | `UpgradeStat` / `UpgradeDefinition` | Enum of scalable values (`ConveyorSpeed`, `GrindingSpeed`, `GrinderMoney`, `LoadingSpeed`) and the ScriptableObject describing one menu row: title, icon UXML, stat, `maxLevel`, `bonusPerLevel` (`×(1 + bonus·level)`), `basePrice × priceGrowth^level`. |
 | `UpgradeManager` | On `GameManager`. Tracks levels, `TryBuy()` spends `Wallet` money, `GetMultiplier(stat)` folds every definition for that stat, `OnChanged`. Lazy-initialised so readers may subscribe in `OnEnable`. |
 | `HudController` | Binds `HUD.uxml` (money pill, SELL, ADD MACHINE, MERGE, UPGRADES tab) to `Wallet`, `TruckDepot`, `GrinderLine`, `UpgradesPanelController`. |
@@ -77,8 +78,8 @@ the owning system that also raises that system's change event, and make sure the
 
 - **Always implement UI with Unity UI Toolkit: UXML for layout, USS for styling, `UIDocument` for runtime screens.**
 - Do not use uGUI (`Canvas`, `Image`, `Button`, `TextMeshProUGUI`) or IMGUI (`OnGUI`) for game UI, even for quick
-  prototypes or single elements. (World-space labels on 3D objects, like the truck `0/16` and machine `LV n`, use the
-  built-in `TextMesh` and billboard to `Camera.main` in `LateUpdate`.)
+  prototypes or single elements. Labels over 3D objects (truck `0/16`, machine `LV n`) are HUD `Label`s too, placed
+  by `WorldLabelLayer` — add a `WorldLabel` to the anchor object rather than a `TextMesh`.
 - Keep UXML/USS assets under `Assets/_Game/UI/`, one UXML per screen/panel, shared styles in a common USS. Design
   against the 1080×2400 portrait reference; icons are drawn with plain styled elements, no sprites.
 - Drive UI from C# by querying elements (`rootVisualElement.Q<...>`) and binding to game state; keep game logic out of

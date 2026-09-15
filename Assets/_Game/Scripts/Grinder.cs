@@ -55,8 +55,8 @@ public class Grinder : MonoBehaviour
     [SerializeField, Min(1), Tooltip("Upper bound on pooled pieces.")]
     private int maxPooledPieces = 64;
 
-    [SerializeField, Tooltip("World-space label showing the machine level. Faces the camera.")]
-    private TextMesh levelLabel;
+    [SerializeField, Tooltip("HUD label pinned over the machine showing its level. Optional.")]
+    private WorldLabel levelLabel;
 
     [SerializeField, Tooltip("Renderers tinted with the level colour (URP/Lit, _BaseColor).")]
     private Renderer[] accentRenderers;
@@ -89,7 +89,6 @@ public class Grinder : MonoBehaviour
     private readonly List<BeltItem> livePieces = new List<BeltItem>();
     private readonly List<BeltItem> tossingPieces = new List<BeltItem>();
     private MaterialPropertyBlock propertyBlock;
-    private Camera mainCamera;
     private Vector3 baseScale;
     private Coroutine popRoutine;
     private float cycleTimer;
@@ -152,7 +151,6 @@ public class Grinder : MonoBehaviour
         );
 
         propertyBlock = new MaterialPropertyBlock();
-        mainCamera = Camera.main;
         baseScale = transform.localScale;
         cycleTimer = -startDelay;
         ApplyLevelVisuals();
@@ -171,19 +169,15 @@ public class Grinder : MonoBehaviour
         cycleTimer -= interval;
         Grind();
     }
-
-    private void LateUpdate()
-    {
-        if (levelLabel != null && mainCamera != null)
-            levelLabel.transform.rotation = mainCamera.transform.rotation;
-    }
     #endregion
 
     #region Public Methods
-    /// <summary>Points a freshly spawned machine at the belt it feeds.</summary>
-    public void Setup(ConveyorBelt targetBelt)
+    /// <summary>Points a freshly spawned machine at the belt it feeds and the HUD layer that draws its label.</summary>
+    public void Setup(ConveyorBelt targetBelt, WorldLabelLayer labelLayer)
     {
         belt = targetBelt;
+        if (levelLabel != null)
+            levelLabel.Layer = labelLayer;
     }
 
     /// <summary>
@@ -326,7 +320,7 @@ public class Grinder : MonoBehaviour
     private void ApplyLevelVisuals()
     {
         if (levelLabel != null)
-            levelLabel.text = "LV " + Level;
+            levelLabel.Text = "LV " + Level;
 
         if (accentRenderers == null)
             return;

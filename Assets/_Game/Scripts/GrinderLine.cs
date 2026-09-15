@@ -22,6 +22,9 @@ public class GrinderLine : MonoBehaviour
     [SerializeField, Tooltip("Belt every machine feeds.")]
     private ConveyorBelt belt;
 
+    [SerializeField, Tooltip("HUD layer that draws every machine's level label.")]
+    private WorldLabelLayer labelLayer;
+
     [SerializeField, Tooltip("Wallet that pays for machines and merges.")]
     private Wallet wallet;
 
@@ -127,7 +130,7 @@ public class GrinderLine : MonoBehaviour
         if (initialGrinder != null)
         {
             initialGrinder.transform.SetPositionAndRotation(slots[0].position, slots[0].rotation);
-            initialGrinder.Setup(belt);
+            initialGrinder.Setup(belt, labelLayer);
             initialGrinder.SetLevel(1);
             ApplyUpgrades(initialGrinder);
             machines[0] = initialGrinder;
@@ -233,7 +236,7 @@ public class GrinderLine : MonoBehaviour
     {
         Grinder machine = Instantiate(grinderPrefab, slots[slot].position, slots[slot].rotation, transform);
         machine.name = grinderPrefab.name + " " + (slot + 1);
-        machine.Setup(belt);
+        machine.Setup(belt, labelLayer);
         machine.SetLevel(1);
         ApplyUpgrades(machine);
         return machine;

@@ -2,6 +2,7 @@
     <Style src="HUD.uss" />
     <ui:Template name="UpgradesPanel" src="UpgradesPanel.uxml" />
     <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
+        <ui:VisualElement name="world-labels" class="world-labels" picking-mode="Ignore" />
         <ui:VisualElement name="left-rail" class="left-rail" picking-mode="Ignore">
             <ui:Button name="sell-button" class="sell-button">
                 <ui:VisualElement class="gift">

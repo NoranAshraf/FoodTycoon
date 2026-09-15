@@ -9,12 +9,8 @@ public class Truck : MonoBehaviour
     [SerializeField, Tooltip("Stack of boxes in the truck bed.")]
     private BoxStack bedStack;
 
-    [SerializeField, Tooltip("World-space label showing loaded/capacity. Faces the camera.")]
-    private TextMesh capacityLabel;
-    #endregion
-
-    #region Private Fields
-    private Camera mainCamera;
+    [SerializeField, Tooltip("HUD label pinned over the bed showing loaded/capacity. Optional.")]
+    private WorldLabel capacityLabel;
     #endregion
 
     #region Public Properties
@@ -29,11 +25,6 @@ public class Truck : MonoBehaviour
     #endregion
 
     #region MonoBehaviour Lifecycle
-    private void Awake()
-    {
-        mainCamera = Camera.main;
-    }
-
     private void OnEnable()
     {
         if (bedStack != null)
@@ -47,15 +38,16 @@ public class Truck : MonoBehaviour
         if (bedStack != null)
             bedStack.OnChanged -= HandleStackChanged;
     }
-
-    private void LateUpdate()
-    {
-        if (capacityLabel != null && mainCamera != null)
-            capacityLabel.transform.rotation = mainCamera.transform.rotation;
-    }
     #endregion
 
     #region Public Methods
+    /// <summary>Points a freshly spawned truck at the HUD layer that draws its capacity label.</summary>
+    public void Setup(WorldLabelLayer labelLayer)
+    {
+        if (capacityLabel != null)
+            capacityLabel.Layer = labelLayer;
+    }
+
     /// <summary>Drives in a straight line to <paramref name="target"/>, easing in and out.</summary>
     public void DriveTo(Vector3 target, float speed, Action onArrived = null)
     {
@@ -105,7 +97,7 @@ public class Truck : MonoBehaviour
         if (capacityLabel == null || bedStack == null)
             return;
 
-        capacityLabel.text = bedStack.Count + "/" + bedStack.Capacity;
+        capacityLabel.Text = bedStack.Count + "/" + bedStack.Capacity;
     }
     #endregion
 }

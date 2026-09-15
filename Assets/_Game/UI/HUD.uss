@@ -8,6 +8,31 @@
     bottom: 0;
 }
 
+/* ---- world labels (LV n over machines, n/16 over the truck) ---- */
+
+/* Filled by WorldLabelLayer; first child of the HUD so every button and overlay draws on top of it. */
+.world-labels {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Left/top are set per frame to the anchor's panel position; the translate pivot comes from the WorldLabel. */
+.world-label {
+    position: absolute;
+    margin: 0;
+    padding: 6px 8px;
+    font-size: 70px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 9px;
+    -unity-text-outline-color: rgb(77, 77, 92);
+    white-space: nowrap;
+}
+
 /* ---- top bar / money ---- */
 
 .top-bar {
