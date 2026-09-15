@@ -25,5 +25,36 @@
             <ui:Label name="sell-title" class="sell-button__title" text="SELL" />
             <ui:Label name="sell-amount" class="sell-button__amount" text="$0" />
         </ui:Button>
+        <ui:VisualElement name="bottom-bar" class="bottom-bar" picking-mode="Ignore">
+            <ui:Button name="buy-button" class="upgrade-button">
+                <ui:VisualElement class="upgrade-button__icon machine-icon">
+                    <ui:VisualElement class="machine-icon__body">
+                        <ui:VisualElement class="machine-icon__window" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="machine-icon__hopper" />
+                    <ui:VisualElement class="machine-icon__plus">
+                        <ui:VisualElement class="machine-icon__plus-h" />
+                        <ui:VisualElement class="machine-icon__plus-v" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Label name="buy-title" class="upgrade-button__title" text="ADD MACHINE" />
+                <ui:VisualElement class="price-tag">
+                    <ui:Label name="buy-price" class="price-tag__text" text="$30" />
+                </ui:VisualElement>
+            </ui:Button>
+            <ui:Button name="merge-button" class="upgrade-button">
+                <ui:VisualElement class="upgrade-button__icon merge-icon">
+                    <ui:VisualElement class="merge-icon__cube merge-icon__cube--left" />
+                    <ui:VisualElement class="merge-icon__cube merge-icon__cube--right" />
+                    <ui:VisualElement class="merge-icon__arrow merge-icon__arrow--left" />
+                    <ui:VisualElement class="merge-icon__arrow merge-icon__arrow--right" />
+                    <ui:VisualElement class="merge-icon__result" />
+                </ui:VisualElement>
+                <ui:Label name="merge-title" class="upgrade-button__title" text="MERGE" />
+                <ui:VisualElement class="price-tag">
+                    <ui:Label name="merge-price" class="price-tag__text" text="$60" />
+                </ui:VisualElement>
+            </ui:Button>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
