@@ -43,5 +43,13 @@ public class Wallet : MonoBehaviour
         OnBalanceChanged?.Invoke(Balance);
         return true;
     }
+
+    /// <summary>Overwrites the balance, e.g. when restoring a save. Negative or non-finite values become 0.</summary>
+    public void SetBalance(double balance)
+    {
+        bool isValid = !double.IsNaN(balance) && !double.IsInfinity(balance);
+        Balance = isValid ? Math.Max(0d, balance) : 0d;
+        OnBalanceChanged?.Invoke(Balance);
+    }
     #endregion
 }

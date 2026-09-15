@@ -40,6 +40,7 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
 | `HudController` | Binds `HUD.uxml` (money pill, SELL, ADD MACHINE, MERGE, UPGRADES tab) to `Wallet`, `TruckDepot`, `GrinderLine`, `UpgradesPanelController`. |
 | `UpgradesPanelController` / `UpgradeRowView` | On `HUD`. Builds one `UpgradeRow.uxml` per definition into the `upgrades-rows` ScrollView, refreshes on `UpgradeManager.OnChanged` + wallet changes, `Show()`/`Hide()` (X button or overlay tap). |
 | `PerformanceSettings` | On `GameManager`. Sets `Application.targetFrameRate` (60; Android otherwise defaults to 30). |
+| `SaveManager` / `SaveData` | On `GameManager`. Persists progress only — wallet balance, machine level per slot, `machinesBought`, upgrade levels (`UpgradeLevelEntry`, keyed by the `UpgradeDefinition` **asset name**) — as JSON at `Application.persistentDataPath/save.json`. Nothing on the production line is saved (belt pieces, counter boxes, truck load restart empty). Any `OnBalanceChanged` / `GrinderLine.OnChanged` / `UpgradeManager.OnChanged` marks it dirty; one write per `writeInterval`, flushed on pause/focus loss/quit. `[DefaultExecutionOrder(100)]` so its `Start` restores after every system's own `Start` (`Wallet.SetBalance`, `UpgradeManager.RestoreLevels`, `GrinderLine.RestoreMachines`) and the HUD refreshes through the usual events. Writes go to `save.json.tmp` first, then swap. Untick `loadOnStart` to test from a fresh game; `Delete Save File` context menu wipes it. |
 | `MoneyFormatter` | `$7`, `$42.0`, then `$1k`, `$1.5k`, `$101.7k`, `$1.2M` … one decimal, trailing `.0` dropped once suffixed (`wholeDollars` for prices/sell amount). |
 
 Economy defaults (all Inspector-tunable): piece `$3.5`, 2 pieces per box → `$7` a box; machines `$30 × 1.6ⁿ`,
@@ -51,7 +52,13 @@ the earlier slot; machines cap at level 2 (`GrinderLine.maxMachineLevel`), so tw
 asset (Create → FoodTycoon → Upgrade) with an icon UXML under `UI/UpgradeIcons/`, add it to `UpgradeManager.upgrades`
 on `GameManager`, and have the consuming system hold a serialized `UpgradeManager` reference, read
 `GetMultiplier(stat)` in `OnEnable` and again on `OnChanged` (see `ConveyorBelt`, `GrinderLine`, `BoxDispatcher`).
-Speed stats divide a time (`cycleTime / multiplier`); money stats multiply a value.
+Speed stats divide a time (`cycleTime / multiplier`); money stats multiply a value. Saved levels are matched by asset
+name, so renaming an upgrade asset resets its level in existing saves.
+
+**Adding saved state:** add a `[SerializeField]` + property to `SaveData` (bump `CurrentVersion` if old files need
+migrating), capture it in `SaveManager.Capture()` and restore it in `Apply()` through a `Restore…`/`Set…` method on
+the owning system that also raises that system's change event, and make sure the system's change event reaches
+`SaveManager` so the write is triggered.
 
 ## Code conventions
 

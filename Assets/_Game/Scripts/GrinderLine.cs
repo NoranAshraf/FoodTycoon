@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -62,6 +63,9 @@ public class GrinderLine : MonoBehaviour
     public int SlotCount => slots.Length;
 
     public int MaxMachineLevel => maxMachineLevel;
+
+    /// <summary>Machines bought so far (the starting one doesn't count); drives <see cref="MachinePrice"/>.</summary>
+    public int MachinesBought => machinesBought;
 
     public int MachineCount
     {
@@ -177,6 +181,50 @@ public class GrinderLine : MonoBehaviour
         StartCoroutine(AbsorbRoutine(absorbed, kept));
         OnChanged?.Invoke(this);
         return true;
+    }
+
+    /// <summary>Level of the machine in each slot, 0 for an empty slot, for saving.</summary>
+    public int[] GetMachineLevels()
+    {
+        int[] levels = new int[machines.Length];
+        for (int i = 0; i < machines.Length; i++)
+            levels[i] = machines[i] != null ? machines[i].Level : 0;
+
+        return levels;
+    }
+
+    /// <summary>
+    /// Rebuilds the line from a save: spawns, re-levels or dismantles machines until every slot holds the level in
+    /// <paramref name="levels"/> (0 or missing = empty), without the purchase animations. Levels are clamped to
+    /// <see cref="MaxMachineLevel"/>.
+    /// </summary>
+    public void RestoreMachines(IReadOnlyList<int> levels, int bought)
+    {
+        int count = levels != null ? levels.Count : 0;
+
+        for (int i = 0; i < machines.Length; i++)
+        {
+            int level = i < count ? Mathf.Min(levels[i], maxMachineLevel) : 0;
+
+            if (level <= 0)
+            {
+                if (machines[i] != null)
+                {
+                    machines[i].Dismantle();
+                    machines[i] = null;
+                }
+
+                continue;
+            }
+
+            if (machines[i] == null)
+                machines[i] = Spawn(i);
+
+            machines[i].SetLevel(level);
+        }
+
+        machinesBought = Mathf.Max(0, bought);
+        OnChanged?.Invoke(this);
     }
     #endregion
 

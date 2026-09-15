@@ -75,6 +75,38 @@ public class UpgradeManager : MonoBehaviour
         EnsureInitialized();
         return multipliers[(int)stat];
     }
+
+    /// <summary>Level of every upgrade keyed by its asset name, for saving.</summary>
+    public UpgradeLevelEntry[] GetLevels()
+    {
+        EnsureInitialized();
+        UpgradeLevelEntry[] entries = new UpgradeLevelEntry[upgrades.Length];
+        for (int i = 0; i < upgrades.Length; i++)
+            entries[i] = new UpgradeLevelEntry(upgrades[i] != null ? upgrades[i].name : string.Empty, levels[i]);
+
+        return entries;
+    }
+
+    /// <summary>
+    /// Replaces every level with the saved ones, matched by asset name. Upgrades missing from the save reset to 0,
+    /// unknown names are ignored and levels are clamped to each upgrade's maximum.
+    /// </summary>
+    public void RestoreLevels(IReadOnlyList<UpgradeLevelEntry> entries)
+    {
+        EnsureInitialized();
+        Array.Clear(levels, 0, levels.Length);
+
+        int count = entries != null ? entries.Count : 0;
+        for (int i = 0; i < count; i++)
+        {
+            int index = IndexOf(entries[i].Id);
+            if (index >= 0)
+                levels[index] = Mathf.Clamp(entries[i].Level, 0, upgrades[index].MaxLevel);
+        }
+
+        RecalculateMultipliers();
+        OnChanged?.Invoke(this);
+    }
     #endregion
 
     #region Private Methods
@@ -96,6 +128,20 @@ public class UpgradeManager : MonoBehaviour
     }
 
     private int IndexOf(UpgradeDefinition upgrade) => upgrade != null ? Array.IndexOf(upgrades, upgrade) : -1;
+
+    private int IndexOf(string assetName)
+    {
+        if (string.IsNullOrEmpty(assetName))
+            return -1;
+
+        for (int i = 0; i < upgrades.Length; i++)
+        {
+            if (upgrades[i] != null && upgrades[i].name == assetName)
+                return i;
+        }
+
+        return -1;
+    }
 
     private void RecalculateMultipliers()
     {
