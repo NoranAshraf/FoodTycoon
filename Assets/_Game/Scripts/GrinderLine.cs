@@ -24,6 +24,10 @@ public class GrinderLine : MonoBehaviour
     [SerializeField, Tooltip("Wallet that pays for machines and merges.")]
     private Wallet wallet;
 
+    [SerializeField, Tooltip("Upgrades whose Grinding Speed and Grinder Money multipliers apply to every machine. " +
+        "Optional.")]
+    private UpgradeManager upgrades;
+
     [SerializeField, Min(0f), Tooltip("Price of the first machine bought (the starting one is free). Prices round to whole dollars.")]
     private float firstMachinePrice = 30f;
 
@@ -97,6 +101,12 @@ public class GrinderLine : MonoBehaviour
         machines = new Grinder[slots.Length];
     }
 
+    private void OnEnable()
+    {
+        if (upgrades != null)
+            upgrades.OnChanged += HandleUpgradesChanged;
+    }
+
     private void Start()
     {
         if (initialGrinder != null)
@@ -104,6 +114,7 @@ public class GrinderLine : MonoBehaviour
             initialGrinder.transform.SetPositionAndRotation(slots[0].position, slots[0].rotation);
             initialGrinder.Setup(belt);
             initialGrinder.SetLevel(1);
+            ApplyUpgrades(initialGrinder);
             machines[0] = initialGrinder;
         }
         else
@@ -112,6 +123,12 @@ public class GrinderLine : MonoBehaviour
         }
 
         OnChanged?.Invoke(this);
+    }
+
+    private void OnDisable()
+    {
+        if (upgrades != null)
+            upgrades.OnChanged -= HandleUpgradesChanged;
     }
     #endregion
 
@@ -157,7 +174,26 @@ public class GrinderLine : MonoBehaviour
         machine.name = grinderPrefab.name + " " + (slot + 1);
         machine.Setup(belt);
         machine.SetLevel(1);
+        ApplyUpgrades(machine);
         return machine;
+    }
+
+    private void ApplyUpgrades(Grinder machine)
+    {
+        if (upgrades == null)
+            return;
+
+        machine.SpeedMultiplier = upgrades.GetMultiplier(UpgradeStat.GrindingSpeed);
+        machine.ValueMultiplier = upgrades.GetMultiplier(UpgradeStat.GrinderMoney);
+    }
+
+    private void HandleUpgradesChanged(UpgradeManager manager)
+    {
+        for (int i = 0; i < machines.Length; i++)
+        {
+            if (machines[i] != null)
+                ApplyUpgrades(machines[i]);
+        }
     }
 
     private int FindFreeSlot()

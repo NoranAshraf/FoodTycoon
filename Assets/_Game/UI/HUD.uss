@@ -68,12 +68,16 @@
     border-radius: 15px;
 }
 
-/* ---- sell button ---- */
+/* ---- left rail: SELL with UPGRADES stacked underneath ---- */
 
-.sell-button {
+.left-rail {
     position: absolute;
     left: 0;
     top: 57%;
+    align-items: flex-start;
+}
+
+.sell-button {
     width: 240px;
     height: 205px;
     margin: 0;
@@ -380,4 +384,84 @@
     border-width: 4px;
     border-color: rgb(58, 142, 68);
     border-radius: 14px;
+}
+
+/* ---- upgrades button (same tab shape as SELL, sits under it) ---- */
+
+.upgrades-button {
+    width: 240px;
+    height: 205px;
+    margin: 30px 0 0 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(130, 64, 176);
+    border-width: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 44px;
+    border-bottom-right-radius: 44px;
+}
+
+.upgrades-button:hover {
+    background-color: rgb(150, 82, 198);
+}
+
+.upgrades-button:active {
+    background-color: rgb(108, 50, 148);
+    scale: 0.96 0.96;
+}
+
+.upgrades-button__title {
+    margin-top: 10px;
+    font-size: 34px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+}
+
+/* up arrow, drawn with plain elements */
+
+.arrow-up {
+    width: 70px;
+    height: 70px;
+    align-items: center;
+}
+
+.arrow-up__shaft {
+    position: absolute;
+    top: 14px;
+    bottom: 0;
+    width: 16px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+}
+
+.arrow-up__head {
+    position: absolute;
+    top: 16px;
+    width: 40px;
+    height: 16px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+}
+
+.arrow-up__head--left {
+    left: 2px;
+    rotate: -45deg;
+}
+
+.arrow-up__head--right {
+    right: 2px;
+    rotate: 45deg;
+}
+
+/* ---- upgrades panel instance: fills the screen so its overlay can too ---- */
+
+.upgrades-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
 }

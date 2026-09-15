@@ -1,0 +1,509 @@
+/* Upgrades overlay + rows. Designed against the 1080x2400 reference (see HUDPanelSettings). */
+
+.upgrades-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(24, 26, 60, 0.6);
+}
+
+/* ---- card ---- */
+
+.upgrades-card {
+    width: 940px;
+    max-height: 1900px;
+    padding: 0 30px 34px 30px;
+    background-color: rgb(226, 229, 240);
+    border-width: 6px;
+    border-color: rgb(62, 63, 124);
+    border-radius: 56px;
+    overflow: visible;
+    opacity: 0;
+    scale: 0.85 0.85;
+    transition-property: opacity, scale;
+    transition-duration: 0.18s, 0.22s;
+    transition-timing-function: ease-out, ease-out-back;
+}
+
+.upgrades-card--open {
+    opacity: 1;
+    scale: 1 1;
+}
+
+.upgrades-card__header {
+    height: 140px;
+    margin: 0 -30px;
+    align-items: center;
+}
+
+.upgrades-card__stripe {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 96px;
+    height: 26px;
+    background-color: rgb(41, 182, 246);
+}
+
+.upgrades-card__tab {
+    position: absolute;
+    top: -40px;
+    height: 136px;
+    padding: 0 70px;
+    justify-content: center;
+    background-color: rgb(41, 182, 246);
+    border-width: 6px;
+    border-color: rgb(255, 255, 255);
+    border-radius: 46px;
+}
+
+.upgrades-card__title {
+    font-size: 68px;
+    letter-spacing: 6px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 3px;
+    -unity-text-outline-color: rgb(62, 63, 124);
+}
+
+.upgrades-close {
+    position: absolute;
+    top: -46px;
+    right: -46px;
+    width: 124px;
+    height: 124px;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(232, 69, 60);
+    border-width: 6px;
+    border-color: rgb(255, 255, 255);
+    border-radius: 32px;
+}
+
+.upgrades-close:hover {
+    background-color: rgb(245, 92, 82);
+}
+
+.upgrades-close:active {
+    background-color: rgb(198, 50, 44);
+    scale: 0.94 0.94;
+}
+
+.upgrades-close__bar {
+    position: absolute;
+    width: 66px;
+    height: 13px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 7px;
+}
+
+.upgrades-close__bar--a {
+    rotate: 45deg;
+}
+
+.upgrades-close__bar--b {
+    rotate: -45deg;
+}
+
+/* ---- row list ---- */
+
+.upgrades-rows {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    margin-top: 30px;
+}
+
+/* ---- one upgrade row ---- */
+
+.upgrade-row {
+    flex-direction: row;
+    align-items: center;
+    height: 192px;
+    margin-bottom: 22px;
+    padding: 0 20px 0 22px;
+    background-color: rgb(255, 255, 255);
+    border-width: 5px;
+    border-color: rgb(62, 63, 124);
+    border-radius: 38px;
+}
+
+.upgrade-row__icon {
+    width: 124px;
+    height: 124px;
+    flex-shrink: 0;
+}
+
+/* the instantiated icon template must fill the slot or its absolute children collapse */
+.upgrade-row__icon > * {
+    width: 100%;
+    height: 100%;
+}
+
+.upgrade-row__body {
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin: 0 24px;
+}
+
+.upgrade-row__title {
+    font-size: 34px;
+    -unity-font-style: bold;
+    color: rgb(62, 63, 124);
+}
+
+.upgrade-row__track {
+    height: 34px;
+    margin-top: 12px;
+    background-color: rgb(210, 212, 225);
+    border-radius: 17px;
+    overflow: hidden;
+}
+
+.upgrade-row__fill {
+    width: 0;
+    height: 100%;
+    background-color: rgb(41, 182, 246);
+    border-radius: 17px;
+    transition-property: width;
+    transition-duration: 0.25s;
+}
+
+.upgrade-row__level {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 22px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(62, 63, 124);
+}
+
+.upgrade-row--maxed .upgrade-row__fill {
+    background-color: rgb(248, 198, 47);
+}
+
+.upgrade-row__buy {
+    width: 216px;
+    height: 136px;
+    margin: 0;
+    padding: 0 8px;
+    flex-shrink: 0;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(88, 187, 98);
+    border-width: 5px;
+    border-color: rgb(58, 142, 68);
+    border-radius: 32px;
+}
+
+.upgrade-row__buy:hover {
+    background-color: rgb(104, 204, 114);
+}
+
+.upgrade-row__buy:active {
+    background-color: rgb(70, 160, 80);
+    scale: 0.95 0.95;
+}
+
+.upgrade-row__buy:disabled {
+    opacity: 1;
+    background-color: rgb(150, 153, 176);
+    border-color: rgb(112, 114, 146);
+}
+
+.upgrade-row--maxed .upgrade-row__buy:disabled {
+    background-color: rgb(248, 198, 47);
+    border-color: rgb(206, 158, 22);
+}
+
+.upgrade-row__cash {
+    width: 70px;
+    height: 44px;
+    margin-right: 10px;
+}
+
+.upgrade-row__cash .cash__band {
+    top: 6px;
+    bottom: 6px;
+    left: 24px;
+    right: 24px;
+}
+
+.upgrade-row__cash .cash__coin {
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+}
+
+.upgrade-row--maxed .upgrade-row__cash {
+    display: none;
+}
+
+.upgrade-row__price {
+    font-size: 38px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+}
+
+/* ================================================================
+   Row icons (Assets/_Game/UI/UpgradeIcons/*.uxml), plain elements
+   ================================================================ */
+
+.upgrade-icon {
+    width: 100%;
+    height: 100%;
+}
+
+/* conveyor: grey belt slab with stripes, orange speed arrow above */
+
+.icon-conveyor__belt {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 66px;
+    height: 46px;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(96, 98, 118);
+    border-width: 4px;
+    border-color: rgb(62, 63, 124);
+    border-radius: 12px;
+}
+
+.icon-conveyor__stripe {
+    width: 10px;
+    height: 26px;
+    background-color: rgb(206, 208, 222);
+    border-radius: 3px;
+}
+
+.icon-conveyor__arrow {
+    position: absolute;
+    left: 20px;
+    top: 24px;
+    width: 66px;
+    height: 14px;
+    background-color: rgb(248, 150, 40);
+    border-radius: 7px;
+}
+
+.icon-conveyor__head {
+    position: absolute;
+    left: 64px;
+    width: 32px;
+    height: 14px;
+    background-color: rgb(248, 150, 40);
+    border-radius: 7px;
+}
+
+.icon-conveyor__head--upper {
+    top: 13px;
+    rotate: 45deg;
+}
+
+.icon-conveyor__head--lower {
+    top: 35px;
+    rotate: -45deg;
+}
+
+/* grinder: purple machine with a hopper and a clock badge */
+
+.icon-grinder__body {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 40px;
+    bottom: 6px;
+    background-color: rgb(130, 64, 176);
+    border-width: 4px;
+    border-color: rgb(84, 40, 118);
+    border-radius: 16px;
+}
+
+.icon-grinder__window {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 16px;
+    height: 24px;
+    background-color: rgb(56, 178, 212);
+    border-radius: 8px;
+}
+
+.icon-grinder__hopper {
+    position: absolute;
+    left: 34px;
+    right: 34px;
+    top: 8px;
+    height: 40px;
+    background-color: rgb(0, 179, 212);
+    border-width: 4px;
+    border-color: rgb(0, 120, 150);
+    border-radius: 20px;
+}
+
+.icon-grinder__badge {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 52px;
+    height: 52px;
+    background-color: rgb(248, 150, 40);
+    border-width: 4px;
+    border-color: rgb(255, 255, 255);
+    border-radius: 26px;
+}
+
+.icon-grinder__hand {
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    border-radius: 3px;
+}
+
+.icon-grinder__hand--minute {
+    left: 20px;
+    top: 5px;
+    width: 5px;
+    height: 19px;
+}
+
+.icon-grinder__hand--hour {
+    left: 20px;
+    top: 20px;
+    width: 15px;
+    height: 5px;
+}
+
+/* money: a stack of three bills */
+
+.icon-money__bill {
+    position: absolute;
+    left: 14px;
+    width: 96px;
+    height: 58px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(88, 187, 98);
+    border-width: 4px;
+    border-color: rgb(58, 142, 68);
+    border-radius: 10px;
+}
+
+.icon-money__bill--bottom {
+    top: 58px;
+}
+
+.icon-money__bill--middle {
+    top: 36px;
+}
+
+.icon-money__bill--top {
+    top: 14px;
+}
+
+.icon-money__band {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 32px;
+    right: 32px;
+    background-color: rgb(233, 120, 150);
+    border-radius: 4px;
+}
+
+.icon-money__coin {
+    width: 30px;
+    height: 30px;
+    background-color: rgb(222, 245, 218);
+    border-width: 3px;
+    border-color: rgb(58, 142, 68);
+    border-radius: 15px;
+}
+
+/* loading: cardboard box with tape and an up-arrow badge */
+
+.icon-loading__box {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    top: 30px;
+    bottom: 6px;
+    background-color: rgb(214, 160, 98);
+    border-width: 4px;
+    border-color: rgb(150, 100, 50);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.icon-loading__tape {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 16px;
+    margin-left: -8px;
+    background-color: rgb(244, 230, 196);
+}
+
+.icon-loading__lid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 24px;
+    height: 5px;
+    background-color: rgb(150, 100, 50);
+}
+
+.icon-loading__badge {
+    position: absolute;
+    right: -4px;
+    top: -4px;
+    width: 52px;
+    height: 52px;
+    align-items: center;
+    background-color: rgb(41, 182, 246);
+    border-width: 4px;
+    border-color: rgb(255, 255, 255);
+    border-radius: 26px;
+}
+
+.icon-loading__shaft {
+    position: absolute;
+    top: 12px;
+    bottom: 8px;
+    width: 8px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 4px;
+}
+
+.icon-loading__head {
+    position: absolute;
+    top: 13px;
+    width: 22px;
+    height: 8px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 4px;
+}
+
+.icon-loading__head--left {
+    left: 5px;
+    rotate: -45deg;
+}
+
+.icon-loading__head--right {
+    right: 5px;
+    rotate: 45deg;
+}

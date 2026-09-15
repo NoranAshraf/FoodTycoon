@@ -1,30 +1,32 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="HUD.uss" />
+    <ui:Template name="UpgradesPanel" src="UpgradesPanel.uxml" />
     <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
-        <ui:VisualElement name="top-bar" class="top-bar" picking-mode="Ignore">
-            <ui:VisualElement name="money-pill" class="pill">
-                <ui:VisualElement name="money-icon" class="cash">
-                    <ui:VisualElement class="cash__band" />
-                    <ui:VisualElement class="cash__coin" />
+        <ui:VisualElement name="left-rail" class="left-rail" picking-mode="Ignore">
+            <ui:Button name="sell-button" class="sell-button">
+                <ui:VisualElement class="gift">
+                    <ui:VisualElement class="gift__box">
+                        <ui:VisualElement class="gift__ribbon-v" />
+                        <ui:VisualElement class="gift__ribbon-h" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="gift__lid">
+                        <ui:VisualElement class="gift__ribbon-v" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="gift__bow gift__bow--left" />
+                    <ui:VisualElement class="gift__bow gift__bow--right" />
                 </ui:VisualElement>
-                <ui:Label name="money-label" class="pill__text" text="$0.0" />
-            </ui:VisualElement>
+                <ui:Label name="sell-title" class="sell-button__title" text="SELL" />
+                <ui:Label name="sell-amount" class="sell-button__amount" text="$0" />
+            </ui:Button>
+            <ui:Button name="upgrades-button" class="upgrades-button">
+                <ui:VisualElement class="arrow-up">
+                    <ui:VisualElement class="arrow-up__shaft" />
+                    <ui:VisualElement class="arrow-up__head arrow-up__head--left" />
+                    <ui:VisualElement class="arrow-up__head arrow-up__head--right" />
+                </ui:VisualElement>
+                <ui:Label name="upgrades-title" class="upgrades-button__title" text="UPGRADES" />
+            </ui:Button>
         </ui:VisualElement>
-        <ui:Button name="sell-button" class="sell-button">
-            <ui:VisualElement class="gift">
-                <ui:VisualElement class="gift__box">
-                    <ui:VisualElement class="gift__ribbon-v" />
-                    <ui:VisualElement class="gift__ribbon-h" />
-                </ui:VisualElement>
-                <ui:VisualElement class="gift__lid">
-                    <ui:VisualElement class="gift__ribbon-v" />
-                </ui:VisualElement>
-                <ui:VisualElement class="gift__bow gift__bow--left" />
-                <ui:VisualElement class="gift__bow gift__bow--right" />
-            </ui:VisualElement>
-            <ui:Label name="sell-title" class="sell-button__title" text="SELL" />
-            <ui:Label name="sell-amount" class="sell-button__amount" text="$0" />
-        </ui:Button>
         <ui:VisualElement name="bottom-bar" class="bottom-bar" picking-mode="Ignore">
             <ui:Button name="buy-button" class="upgrade-button">
                 <ui:VisualElement class="upgrade-button__icon machine-icon">
@@ -55,6 +57,16 @@
                     <ui:Label name="merge-price" class="price-tag__text" text="$60" />
                 </ui:VisualElement>
             </ui:Button>
+        </ui:VisualElement>
+        <ui:Instance template="UpgradesPanel" name="upgrades-panel" class="upgrades-panel" />
+        <ui:VisualElement name="top-bar" class="top-bar" picking-mode="Ignore">
+            <ui:VisualElement name="money-pill" class="pill">
+                <ui:VisualElement name="money-icon" class="cash">
+                    <ui:VisualElement class="cash__band" />
+                    <ui:VisualElement class="cash__coin" />
+                </ui:VisualElement>
+                <ui:Label name="money-label" class="pill__text" text="$0.0" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

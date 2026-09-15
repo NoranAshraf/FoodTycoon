@@ -31,6 +31,9 @@ public class ConveyorBelt : MonoBehaviour
     [SerializeField, Min(0.01f), Tooltip("World distance covered by one repeat of the belt texture. " +
         "Tune so the stripes travel at the same speed as items riding the belt.")]
     private float metersPerTextureRepeat = 1.3f;
+
+    [SerializeField, Tooltip("Upgrades whose Conveyor Speed multiplier scales the belt speed. Optional.")]
+    private UpgradeManager upgrades;
     #endregion
 
     #region Private Fields
@@ -44,14 +47,18 @@ public class ConveyorBelt : MonoBehaviour
     private Vector4 baseScaleOffset;
     private int scaleOffsetId;
     private float scrollOffset;
+    private float speedMultiplier = 1f;
     #endregion
 
     #region Public Properties
+    /// <summary>Base speed before upgrades; <see cref="EffectiveSpeed"/> is what items actually travel at.</summary>
     public float Speed
     {
         get => speed;
         set => speed = Mathf.Max(0f, value);
     }
+
+    public float EffectiveSpeed => speed * speedMultiplier;
 
     public bool IsRunning
     {
@@ -92,18 +99,31 @@ public class ConveyorBelt : MonoBehaviour
         baseScaleOffset = material.GetVector(scaleOffsetId);
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (!isRunning || speed <= 0f)
+        if (upgrades == null)
             return;
 
-        float step = speed * Time.deltaTime;
+        upgrades.OnChanged += HandleUpgradesChanged;
+        HandleUpgradesChanged(upgrades);
+    }
+
+    private void Update()
+    {
+        float effectiveSpeed = EffectiveSpeed;
+        if (!isRunning || effectiveSpeed <= 0f)
+            return;
+
+        float step = effectiveSpeed * Time.deltaTime;
         ScrollTexture(step);
         MoveItems(step);
     }
 
     private void OnDisable()
     {
+        if (upgrades != null)
+            upgrades.OnChanged -= HandleUpgradesChanged;
+
         if (beltRenderer == null || propertyBlock == null)
             return;
 
@@ -146,6 +166,11 @@ public class ConveyorBelt : MonoBehaviour
     #endregion
 
     #region Private Methods
+    private void HandleUpgradesChanged(UpgradeManager manager)
+    {
+        speedMultiplier = manager.GetMultiplier(UpgradeStat.ConveyorSpeed);
+    }
+
     private void ScrollTexture(float step)
     {
         float direction = isReversed ? -1f : 1f;

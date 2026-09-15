@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="UpgradesPanel.uss" />
+    <ui:VisualElement name="upgrades-overlay" class="upgrades-overlay">
+        <ui:VisualElement name="upgrades-card" class="upgrades-card">
+            <ui:VisualElement name="upgrades-header" class="upgrades-card__header" picking-mode="Ignore">
+                <ui:VisualElement class="upgrades-card__stripe" picking-mode="Ignore" />
+                <ui:VisualElement class="upgrades-card__tab" picking-mode="Ignore">
+                    <ui:Label name="upgrades-title" class="upgrades-card__title" text="UPGRADES" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:ScrollView name="upgrades-rows" class="upgrades-rows" mode="Vertical" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="Hidden" touch-scroll-type="Elastic" />
+            <ui:Button name="upgrades-close" class="upgrades-close">
+                <ui:VisualElement class="upgrades-close__bar upgrades-close__bar--a" />
+                <ui:VisualElement class="upgrades-close__bar upgrades-close__bar--b" />
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

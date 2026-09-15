@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="/Assets/_Game/UI/UpgradesPanel.uss" />
+    <ui:VisualElement class="upgrade-icon icon-grinder" picking-mode="Ignore">
+        <ui:VisualElement class="icon-grinder__body" picking-mode="Ignore">
+            <ui:VisualElement class="icon-grinder__window" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement class="icon-grinder__hopper" picking-mode="Ignore" />
+        <ui:VisualElement class="icon-grinder__badge" picking-mode="Ignore">
+            <ui:VisualElement class="icon-grinder__hand icon-grinder__hand--minute" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-grinder__hand icon-grinder__hand--hour" picking-mode="Ignore" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -9,8 +9,10 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
 
 - `Assets/_Game/Scripts/` — all game code (one class per file, no namespaces).
 - `Assets/_Game/Prefabs/` — `Grinder`, `ProductCube` (belt piece), `PackagedBox`, `Truck`.
+- `Assets/_Game/Upgrades/` — one `UpgradeDefinition` asset per upgrades-menu row.
 - `Assets/_Game/UI/` — `HUD.uxml`, `HUD.uss`, `HUDPanelSettings.asset` (1080×2400 reference, match width),
-  `UnityDefaultRuntimeTheme.tss`.
+  `UnityDefaultRuntimeTheme.tss`; `UpgradesPanel.uxml/.uss` (overlay, instanced inside `HUD.uxml`),
+  `UpgradeRow.uxml` (row template), `UpgradeIcons/*.uxml` (one drawn icon per upgrade).
 - `Assets/TestAssets/` — third-party art (grinder, packing machine, truck, materials). Don't edit these; wrap them in
   our own prefabs instead.
 - `Assets/Materials/` — our own materials (`Product`, `Road`, `Ground`).
@@ -27,12 +29,22 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
 | `BoxDispatcher` | Moves the oldest counter box (after `dwellTime`) to `Destination` (the docked truck bed). |
 | `Truck` / `TruckDepot` | Depot keeps one truck docked; `Sell()` pays `LoadValue` into the `Wallet`, drives it out right and a new truck in from the left, redirecting the dispatcher. A departing truck releases its bed boxes to the pool (`BoxStack.ReleaseAll()`) before despawning. |
 | `Wallet` | `double` balance, `Add` / `TrySpend`, `OnBalanceChanged`. |
-| `HudController` | Binds `HUD.uxml` (money pill, SELL, ADD MACHINE, MERGE) to `Wallet`, `TruckDepot`, `GrinderLine`. |
+| `UpgradeStat` / `UpgradeDefinition` | Enum of scalable values (`ConveyorSpeed`, `GrindingSpeed`, `GrinderMoney`, `LoadingSpeed`) and the ScriptableObject describing one menu row: title, icon UXML, stat, `maxLevel`, `bonusPerLevel` (`×(1 + bonus·level)`), `basePrice × priceGrowth^level`. |
+| `UpgradeManager` | On `GameManager`. Tracks levels, `TryBuy()` spends `Wallet` money, `GetMultiplier(stat)` folds every definition for that stat, `OnChanged`. Lazy-initialised so readers may subscribe in `OnEnable`. |
+| `HudController` | Binds `HUD.uxml` (money pill, SELL, ADD MACHINE, MERGE, UPGRADES tab) to `Wallet`, `TruckDepot`, `GrinderLine`, `UpgradesPanelController`. |
+| `UpgradesPanelController` / `UpgradeRowView` | On `HUD`. Builds one `UpgradeRow.uxml` per definition into the `upgrades-rows` ScrollView, refreshes on `UpgradeManager.OnChanged` + wallet changes, `Show()`/`Hide()` (X button or overlay tap). |
 | `MoneyFormatter` | `$7`, `$42.0`, `$101.7k` … (`wholeDollars` for prices/sell amount). |
 
 Economy defaults (all Inspector-tunable): piece `$3.5`, 2 pieces per box → `$7` a box; machines `$30 × 1.6ⁿ`,
 merges `$60 × 2.2^(level−1)`, rounded to whole dollars. Merge takes the lowest pair of equal-level machines and keeps
-the earlier slot.
+the earlier slot. Upgrades (same wallet money, 10 levels each): conveyor `$20 × 1.5ⁿ` +20%/lv, grinding speed
+`$40 × 1.6ⁿ` +20%/lv, grinder money `$50 × 1.7ⁿ` +25%/lv, loading speed `$25 × 1.5ⁿ` +20%/lv.
+
+**Adding an upgrade:** add a member to `UpgradeStat` (if it is a new kind of effect), create an `UpgradeDefinition`
+asset (Create → FoodTycoon → Upgrade) with an icon UXML under `UI/UpgradeIcons/`, add it to `UpgradeManager.upgrades`
+on `GameManager`, and have the consuming system hold a serialized `UpgradeManager` reference, read
+`GetMultiplier(stat)` in `OnEnable` and again on `OnChanged` (see `ConveyorBelt`, `GrinderLine`, `BoxDispatcher`).
+Speed stats divide a time (`cycleTime / multiplier`); money stats multiply a value.
 
 ## Code conventions
 

@@ -87,6 +87,8 @@ public class Grinder : MonoBehaviour
     private Vector3 baseScale;
     private Coroutine popRoutine;
     private float cycleTimer;
+    private float speedMultiplier = 1f;
+    private float valueMultiplier = 1f;
     #endregion
 
     #region Public Properties
@@ -101,6 +103,23 @@ public class Grinder : MonoBehaviour
         get => pieceValue;
         set => pieceValue = Mathf.Max(0f, value);
     }
+
+    /// <summary>Divides the cycle time; 2 grinds twice as often. Pushed in by the line from the upgrades.</summary>
+    public float SpeedMultiplier
+    {
+        get => speedMultiplier;
+        set => speedMultiplier = Mathf.Max(0.01f, value);
+    }
+
+    /// <summary>Scales the value of every piece produced. Pushed in by the line from the upgrades.</summary>
+    public float ValueMultiplier
+    {
+        get => valueMultiplier;
+        set => valueMultiplier = Mathf.Max(0f, value);
+    }
+
+    /// <summary>Seconds between grind cycles after upgrades.</summary>
+    public float EffectiveCycleTime => cycleTime / speedMultiplier;
 
     /// <summary>Pieces produced per cycle at the current level; doubles with every merge by default.</summary>
     public int CurrentPiecesPerCycle => piecesPerCycle * (int)Mathf.Pow(levelOutputMultiplier, Level - 1);
@@ -135,11 +154,12 @@ public class Grinder : MonoBehaviour
         if (!IsProducing || belt == null || piecePrefab == null)
             return;
 
+        float interval = EffectiveCycleTime;
         cycleTimer += Time.deltaTime;
-        if (cycleTimer < cycleTime)
+        if (cycleTimer < interval)
             return;
 
-        cycleTimer -= cycleTime;
+        cycleTimer -= interval;
         Grind();
     }
 
@@ -213,7 +233,7 @@ public class Grinder : MonoBehaviour
         }
 
         BeltItem piece = piecePool.Get();
-        piece.Value = pieceValue;
+        piece.Value = pieceValue * valueMultiplier;
         piece.transform.SetPositionAndRotation(outputPoint.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
         tossingPieces.Add(piece);
 

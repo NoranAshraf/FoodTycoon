@@ -24,10 +24,15 @@ public class BoxDispatcher : MonoBehaviour
 
     [SerializeField, Min(0f), Tooltip("Arc height of the flight.")]
     private float sendArcHeight = 0.5f;
+
+    [SerializeField, Tooltip("Upgrades whose Loading Speed multiplier shortens the dwell time and send interval. " +
+        "Optional.")]
+    private UpgradeManager upgrades;
     #endregion
 
     #region Private Fields
     private float nextSendTime;
+    private float speedMultiplier = 1f;
     #endregion
 
     #region Public Properties
@@ -39,19 +44,41 @@ public class BoxDispatcher : MonoBehaviour
     #endregion
 
     #region MonoBehaviour Lifecycle
+    private void OnEnable()
+    {
+        if (upgrades == null)
+            return;
+
+        upgrades.OnChanged += HandleUpgradesChanged;
+        HandleUpgradesChanged(upgrades);
+    }
+
     private void Update()
     {
         if (source == null || destination == null || destination.IsFull || Time.time < nextSendTime)
             return;
 
         PackagedBox box = source.Oldest;
-        if (box == null || Time.time - box.PlacedTime < dwellTime)
+        if (box == null || Time.time - box.PlacedTime < dwellTime / speedMultiplier)
             return;
 
         int ticket = destination.Reserve();
         source.TakeOldest();
         box.FlyTo(destination, ticket, sendDuration, sendArcHeight);
-        nextSendTime = Time.time + sendInterval;
+        nextSendTime = Time.time + sendInterval / speedMultiplier;
+    }
+
+    private void OnDisable()
+    {
+        if (upgrades != null)
+            upgrades.OnChanged -= HandleUpgradesChanged;
+    }
+    #endregion
+
+    #region Private Methods
+    private void HandleUpgradesChanged(UpgradeManager manager)
+    {
+        speedMultiplier = manager.GetMultiplier(UpgradeStat.LoadingSpeed);
     }
     #endregion
 }

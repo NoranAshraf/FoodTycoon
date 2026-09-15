@@ -1,7 +1,10 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-/// <summary>Binds the UI Toolkit HUD (HUD.uxml) to the wallet, the truck depot and the machine line.</summary>
+/// <summary>
+/// Binds the UI Toolkit HUD (HUD.uxml) to the wallet, the truck depot and the machine line, and hands the UPGRADES tab
+/// off to the <see cref="UpgradesPanelController"/>.
+/// </summary>
 [RequireComponent(typeof(UIDocument))]
 public class HudController : MonoBehaviour
 {
@@ -14,6 +17,9 @@ public class HudController : MonoBehaviour
 
     [SerializeField, Tooltip("Machine line the ADD MACHINE and MERGE buttons act on.")]
     private GrinderLine grinderLine;
+
+    [SerializeField, Tooltip("Overlay the UPGRADES tab opens.")]
+    private UpgradesPanelController upgradesPanel;
     #endregion
 
     #region Private Fields
@@ -24,6 +30,7 @@ public class HudController : MonoBehaviour
     private Label buyPriceLabel;
     private Button mergeButton;
     private Label mergePriceLabel;
+    private Button upgradesButton;
     #endregion
 
     #region MonoBehaviour Lifecycle
@@ -37,10 +44,12 @@ public class HudController : MonoBehaviour
         buyPriceLabel = root.Q<Label>("buy-price");
         mergeButton = root.Q<Button>("merge-button");
         mergePriceLabel = root.Q<Label>("merge-price");
+        upgradesButton = root.Q<Button>("upgrades-button");
 
         sellButton.clicked += HandleSellClicked;
         buyButton.clicked += HandleBuyClicked;
         mergeButton.clicked += HandleMergeClicked;
+        upgradesButton.clicked += HandleUpgradesClicked;
         wallet.OnBalanceChanged += HandleBalanceChanged;
         depot.OnLoadValueChanged += HandleLoadValueChanged;
         grinderLine.OnChanged += HandleLineChanged;
@@ -60,6 +69,9 @@ public class HudController : MonoBehaviour
         if (mergeButton != null)
             mergeButton.clicked -= HandleMergeClicked;
 
+        if (upgradesButton != null)
+            upgradesButton.clicked -= HandleUpgradesClicked;
+
         if (wallet != null)
             wallet.OnBalanceChanged -= HandleBalanceChanged;
 
@@ -77,6 +89,8 @@ public class HudController : MonoBehaviour
     private void HandleBuyClicked() => grinderLine.TryBuyMachine();
 
     private void HandleMergeClicked() => grinderLine.TryMerge();
+
+    private void HandleUpgradesClicked() => upgradesPanel.Show();
 
     private void HandleBalanceChanged(double balance)
     {

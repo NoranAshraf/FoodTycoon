@@ -549,6 +549,7 @@ GameObject:
   m_Component:
   - component: {fileID: 449056342}
   - component: {fileID: 449056341}
+  - component: {fileID: 449056343}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -584,6 +585,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &449056343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449056340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283daee738e4deb43a8cdb819d86fec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeManager
+  wallet: {fileID: 449056341}
+  upgrades:
+  - {fileID: 11400000, guid: c51602932679fcf41b18012e2113a0d9, type: 2}
+  - {fileID: 11400000, guid: 13dc54ff767c8504f92f10fb9c6b2f09, type: 2}
+  - {fileID: 11400000, guid: 356ceb0a3017a444e817361862ba56fa, type: 2}
+  - {fileID: 11400000, guid: 61b108523054a9a45a667e41083abcab, type: 2}
 --- !u!1001 &460157163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1007,6 +1026,7 @@ MonoBehaviour:
   sendInterval: 0.25
   sendDuration: 0.6
   sendArcHeight: 0.5
+  upgrades: {fileID: 449056343}
 --- !u!1001 &955256890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1093,6 +1113,7 @@ MonoBehaviour:
   isReversed: 0
   isRunning: 1
   metersPerTextureRepeat: 1.3
+  upgrades: {fileID: 449056343}
 --- !u!1 &1208798587
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,6 +1393,7 @@ GameObject:
   - component: {fileID: 1961372611}
   - component: {fileID: 1961372610}
   - component: {fileID: 1961372609}
+  - component: {fileID: 1961372612}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -1394,6 +1416,7 @@ MonoBehaviour:
   wallet: {fileID: 449056341}
   depot: {fileID: 679858163}
   grinderLine: {fileID: 2022464012}
+  upgradesPanel: {fileID: 1961372612}
 --- !u!114 &1961372610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1432,6 +1455,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1961372612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961372608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e50f882b5f6e24295e0ff67dfac515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradesPanelController
+  upgrades: {fileID: 449056343}
+  wallet: {fileID: 449056341}
+  rowTemplate: {fileID: 9197481963319205126, guid: a37a0202a110b594795989479ba101b7, type: 3}
 --- !u!1 &1981635634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1501,6 +1539,7 @@ MonoBehaviour:
   initialGrinder: {fileID: 276562446}
   belt: {fileID: 1059128430}
   wallet: {fileID: 449056341}
+  upgrades: {fileID: 449056343}
   firstMachinePrice: 30
   machinePriceGrowth: 1.6
   firstMergePrice: 60

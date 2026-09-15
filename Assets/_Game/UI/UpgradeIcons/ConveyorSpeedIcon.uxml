@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="/Assets/_Game/UI/UpgradesPanel.uss" />
+    <ui:VisualElement class="upgrade-icon icon-conveyor" picking-mode="Ignore">
+        <ui:VisualElement class="icon-conveyor__belt" picking-mode="Ignore">
+            <ui:VisualElement class="icon-conveyor__stripe" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-conveyor__stripe" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-conveyor__stripe" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-conveyor__stripe" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement class="icon-conveyor__arrow" picking-mode="Ignore" />
+        <ui:VisualElement class="icon-conveyor__head icon-conveyor__head--upper" picking-mode="Ignore" />
+        <ui:VisualElement class="icon-conveyor__head icon-conveyor__head--lower" picking-mode="Ignore" />
+    </ui:VisualElement>
+</ui:UXML>

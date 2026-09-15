@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="/Assets/_Game/UI/UpgradesPanel.uss" />
+    <ui:VisualElement class="upgrade-icon icon-money" picking-mode="Ignore">
+        <ui:VisualElement class="icon-money__bill icon-money__bill--bottom" picking-mode="Ignore">
+            <ui:VisualElement class="icon-money__band" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-money__coin" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement class="icon-money__bill icon-money__bill--middle" picking-mode="Ignore">
+            <ui:VisualElement class="icon-money__band" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-money__coin" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement class="icon-money__bill icon-money__bill--top" picking-mode="Ignore">
+            <ui:VisualElement class="icon-money__band" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-money__coin" picking-mode="Ignore" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

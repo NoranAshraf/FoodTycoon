@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="/Assets/_Game/UI/UpgradesPanel.uss" />
+    <ui:VisualElement class="upgrade-icon icon-loading" picking-mode="Ignore">
+        <ui:VisualElement class="icon-loading__box" picking-mode="Ignore">
+            <ui:VisualElement class="icon-loading__tape" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-loading__lid" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement class="icon-loading__badge" picking-mode="Ignore">
+            <ui:VisualElement class="icon-loading__shaft" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-loading__head icon-loading__head--left" picking-mode="Ignore" />
+            <ui:VisualElement class="icon-loading__head icon-loading__head--right" picking-mode="Ignore" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
