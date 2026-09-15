@@ -127,6 +127,9 @@ public class Grinder : MonoBehaviour
     public int Level { get; private set; } = 1;
 
     public bool IsProducing { get; set; } = true;
+
+    /// <summary>Scale the machine rests at between pops.</summary>
+    public Vector3 RestingScale => baseScale;
     #endregion
 
     #region MonoBehaviour Lifecycle
@@ -177,19 +180,38 @@ public class Grinder : MonoBehaviour
         belt = targetBelt;
     }
 
-    public void SetLevel(int level)
+    /// <summary>
+    /// Sets the level. The label and tint update immediately, or on <see cref="ShowLevel"/> when
+    /// <paramref name="showNow"/> is false (so a merge can reveal the new level at the moment of impact).
+    /// </summary>
+    public void SetLevel(int level, bool showNow = true)
     {
         Level = Mathf.Max(1, level);
-        ApplyLevelVisuals();
+        if (showNow)
+            ApplyLevelVisuals();
     }
 
-    /// <summary>Scale punch from <paramref name="fromScale"/> (fraction of the resting scale) back to normal.</summary>
+    /// <summary>Updates the label and tint to the current level after a deferred <see cref="SetLevel"/>.</summary>
+    public void ShowLevel() => ApplyLevelVisuals();
+
+    /// <summary>
+    /// Scale punch from <paramref name="fromScale"/> (fraction of the resting scale) back to normal: below 1 grows in,
+    /// above 1 bulges and settles.
+    /// </summary>
     public void Pop(float fromScale = 0f)
     {
-        if (popRoutine != null)
-            StopCoroutine(popRoutine);
-
+        CancelPop();
         popRoutine = StartCoroutine(PopRoutine(fromScale));
+    }
+
+    /// <summary>Stops a running pop where it is, so another animation can take over the scale.</summary>
+    public void CancelPop()
+    {
+        if (popRoutine == null)
+            return;
+
+        StopCoroutine(popRoutine);
+        popRoutine = null;
     }
 
     /// <summary>

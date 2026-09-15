@@ -98,7 +98,11 @@ public class HudController : MonoBehaviour
         RefreshUpgradeButtons();
     }
 
-    private void HandleLoadValueChanged(double value) => sellAmountLabel.text = MoneyFormatter.Format(value, true);
+    private void HandleLoadValueChanged(double value)
+    {
+        sellAmountLabel.text = MoneyFormatter.Format(value, true);
+        sellButton.SetEnabled(value > 0d);
+    }
 
     private void HandleLineChanged(GrinderLine line) => RefreshUpgradeButtons();
 

@@ -101,6 +101,20 @@
     scale: 0.96 0.96;
 }
 
+.sell-button:disabled {
+    opacity: 1;
+    background-color: rgb(206, 208, 222);
+}
+
+.sell-button:disabled .sell-button__title,
+.sell-button:disabled .sell-button__amount {
+    color: rgb(112, 114, 146);
+}
+
+.sell-button:disabled .gift {
+    opacity: 0.45;
+}
+
 .sell-button__title {
     margin-top: 6px;
     font-size: 38px;

@@ -18,6 +18,8 @@ public class UpgradeManager : MonoBehaviour
     #endregion
 
     #region Private Fields
+    private static readonly int StatCount = Enum.GetValues(typeof(UpgradeStat)).Length;
+
     private int[] levels;
     private float[] multipliers;
     #endregion
@@ -79,14 +81,17 @@ public class UpgradeManager : MonoBehaviour
     /// <summary>Lazy so readers subscribing in their OnEnable get correct values whatever the script order.</summary>
     private void EnsureInitialized()
     {
-        if (levels != null)
-            return;
-
         if (upgrades == null)
             upgrades = Array.Empty<UpgradeDefinition>();
 
+        // Fix: the Editor's domain-reload backup restores null private arrays as empty ones, so test sizes, not null.
+        bool hasLevels = levels != null && levels.Length == upgrades.Length;
+        bool hasMultipliers = multipliers != null && multipliers.Length == StatCount;
+        if (hasLevels && hasMultipliers)
+            return;
+
         levels = new int[upgrades.Length];
-        multipliers = new float[Enum.GetValues(typeof(UpgradeStat)).Length];
+        multipliers = new float[StatCount];
         RecalculateMultipliers();
     }
 

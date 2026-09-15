@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// The row of machine slots beside the belt. Buys new level-1 grinders into free slots and merges two machines of the
-/// same level into one machine a level higher, charging the wallet for both.
+/// same level into one machine a level higher (up to <see cref="MaxMachineLevel"/>), charging the wallet for both.
 /// </summary>
 public class GrinderLine : MonoBehaviour
 {
@@ -40,8 +40,17 @@ public class GrinderLine : MonoBehaviour
     [SerializeField, Min(1f), Tooltip("Merge price multiplier per level of the pair being merged.")]
     private float mergePriceGrowth = 2.2f;
 
-    [SerializeField, Min(0.05f), Tooltip("Seconds the absorbed machine takes to slide into its partner.")]
-    private float mergeDuration = 0.3f;
+    [SerializeField, Min(0.05f), Tooltip("Seconds the absorbed machine takes to hop into its partner.")]
+    private float mergeDuration = 0.45f;
+
+    [SerializeField, Min(0f), Tooltip("Peak height of the absorbed machine's hop, in world units.")]
+    private float mergeHopHeight = 0.5f;
+
+    [SerializeField, Min(1f), Tooltip("Scale the surviving machine bulges to when the other lands in it.")]
+    private float mergeImpactScale = 1.3f;
+
+    [SerializeField, Min(1), Tooltip("Highest level a machine can reach; two machines at this level can't be merged.")]
+    private int maxMachineLevel = 2;
     #endregion
 
     #region Private Fields
@@ -51,6 +60,8 @@ public class GrinderLine : MonoBehaviour
 
     #region Public Properties
     public int SlotCount => slots.Length;
+
+    public int MaxMachineLevel => maxMachineLevel;
 
     public int MachineCount
     {
@@ -159,7 +170,8 @@ public class GrinderLine : MonoBehaviour
         Grinder absorbed = machines[absorbSlot];
         machines[absorbSlot] = null;
 
-        kept.SetLevel(level + 1);
+        // The level counts at once (so a second merge can't reuse this machine); the visuals wait for the impact.
+        kept.SetLevel(level + 1, false);
         absorbed.IsProducing = false;
         StartCoroutine(AbsorbRoutine(absorbed, kept));
         OnChanged?.Invoke(this);
@@ -207,7 +219,10 @@ public class GrinderLine : MonoBehaviour
         return -1;
     }
 
-    /// <summary>Finds the two lowest-level identical machines. Returns their level, or 0 if there is no pair.</summary>
+    /// <summary>
+    /// Finds the two lowest-level identical machines below the level cap. Returns their level, or 0 if there is no
+    /// mergeable pair.
+    /// </summary>
     private int FindMergePair(out int firstSlot, out int secondSlot)
     {
         firstSlot = -1;
@@ -216,7 +231,7 @@ public class GrinderLine : MonoBehaviour
 
         for (int i = 0; i < machines.Length; i++)
         {
-            if (machines[i] == null || machines[i].Level >= bestLevel)
+            if (machines[i] == null || machines[i].Level >= bestLevel || machines[i].Level >= maxMachineLevel)
                 continue;
 
             for (int j = i + 1; j < machines.Length; j++)
@@ -234,26 +249,38 @@ public class GrinderLine : MonoBehaviour
         return firstSlot >= 0 ? bestLevel : 0;
     }
 
+    /// <summary>
+    /// The absorbed machine lifts off at once, arcs over and accelerates into its partner while shrinking; the partner
+    /// then reveals its new level with a bulge.
+    /// </summary>
     private IEnumerator AbsorbRoutine(Grinder absorbed, Grinder into)
     {
         Transform mover = absorbed.transform;
         Vector3 startPosition = mover.position;
-        Vector3 startScale = mover.localScale;
+        Vector3 startScale = absorbed.RestingScale;
         float elapsed = 0f;
+
+        // Fix: a machine bought a moment ago is still popping in; take the scale over from the rest size.
+        absorbed.CancelPop();
 
         while (elapsed < mergeDuration && into != null)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / mergeDuration));
-            mover.position = Vector3.Lerp(startPosition, into.transform.position, t);
-            mover.localScale = Vector3.Lerp(startScale, startScale * 0.2f, t);
+            float t = Mathf.Clamp01(elapsed / mergeDuration);
+            Vector3 position = Vector3.Lerp(startPosition, into.transform.position, t * t);
+            position.y += mergeHopHeight * Mathf.Sin(t * Mathf.PI);
+            mover.position = position;
+            mover.localScale = startScale * Mathf.Lerp(1f, 0.15f, t * t * t);
             yield return null;
         }
 
         absorbed.Dismantle();
 
         if (into != null)
-            into.Pop(0.6f);
+        {
+            into.ShowLevel();
+            into.Pop(mergeImpactScale);
+        }
     }
     #endregion
 }

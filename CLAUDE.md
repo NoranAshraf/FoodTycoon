@@ -37,7 +37,7 @@ meta game.** Everything lives in the single scene `Assets/Scenes/SampleScene.uni
 
 Economy defaults (all Inspector-tunable): piece `$3.5`, 2 pieces per box → `$7` a box; machines `$30 × 1.6ⁿ`,
 merges `$60 × 2.2^(level−1)`, rounded to whole dollars. Merge takes the lowest pair of equal-level machines and keeps
-the earlier slot. Upgrades (same wallet money, 10 levels each): conveyor `$20 × 1.5ⁿ` +20%/lv, grinding speed
+the earlier slot; machines cap at level 2 (`GrinderLine.maxMachineLevel`), so two level-2s never count as a pair. Upgrades (same wallet money, 10 levels each): conveyor `$20 × 1.5ⁿ` +20%/lv, grinding speed
 `$40 × 1.6ⁿ` +20%/lv, grinder money `$50 × 1.7ⁿ` +25%/lv, loading speed `$25 × 1.5ⁿ` +20%/lv.
 
 **Adding an upgrade:** add a member to `UpgradeStat` (if it is a new kind of effect), create an `UpgradeDefinition`
